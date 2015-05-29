@@ -114,5 +114,13 @@ namespace RCRunner
             TestRunnersPluginList = new List<ITestFrameworkRunner>();
             TestExecutionPlugiList = new List<ITestExecution>();
         }
+
+        public void RunTestExecutionPlugins(string testCase)
+        {
+            foreach (var testExecution in TestExecutionPlugiList)
+            {
+                testExecution.AfterTestExecution(testCase);
+            }
+        }
     }
 }

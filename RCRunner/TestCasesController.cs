@@ -5,15 +5,15 @@ namespace RCRunner
 {
     public class TestCasesController
     {
-        private List<TestMethod> _testCasesList;
+        public event TestRunFinishedDelegate TestRunFinished;
 
-        public event TestRunFinishedDelegate Finished;
-
-        public event TestRunFinishedDelegate MethodStatusChanged;
-
-        private ITestFrameworkRunner _testFrameworkRunner;
+        public event TestRunFinishedDelegate TestCaseStatusChanged;
 
         public event CheckCanceled Canceled;
+
+        private List<TestMethod> _testCasesList;
+
+        private ITestFrameworkRunner _testFrameworkRunner;
 
         private int _totRunningScripts;
 
@@ -32,20 +32,13 @@ namespace RCRunner
 
         protected virtual void OnMethodStatusChanged(TestMethod testcasemethod)
         {
-            var handler = MethodStatusChanged;
-            if (handler != null) handler(testcasemethod);
-        }
-
-        protected virtual void OnFinished(TestMethod testcasemethod)
-        {
-            var handler = Finished;
+            var handler = TestCaseStatusChanged;
             if (handler != null) handler(testcasemethod);
         }
 
         private void OnTaskTestRunFinishedEvent(TestMethod testcaseMethod)
         {
             _totRunningScripts--;
-            OnFinished(testcaseMethod);
         }
 
         public TestCasesController()
@@ -58,11 +51,11 @@ namespace RCRunner
         {
             _totRunningScripts = 0;
 
-            foreach (var testClass in _testCasesList)
+            foreach (var testMethod in _testCasesList)
             {
-                testClass.TestExecutionStatus = TestExecutionStatus.Waiting;
-                testClass.LastExecutionErrorMsg = string.Empty;
-                OnMethodStatusChanged(testClass);
+                testMethod.TestExecutionStatus = TestExecutionStatus.Waiting;
+                testMethod.LastExecutionErrorMsg = string.Empty;
+                OnMethodStatusChanged(testMethod);
             }
 
             foreach (var testMethod in _testCasesList)
@@ -78,6 +71,7 @@ namespace RCRunner
                 OnMethodStatusChanged(testMethod);
                 var task = new TestCaseRunner(testMethod, _testFrameworkRunner, _pluginLoader);
                 task.TestRunFinished += OnTaskTestRunFinishedEvent;
+                task.TestRunFinished += TestRunFinished;
                 task.DoWork();
             }
         }
@@ -86,7 +80,6 @@ namespace RCRunner
         {
             _testCasesList = testCasesList;
             var t = new Thread(DoWorkCore);
-            t.SetApartmentState(ApartmentState.STA);
             t.Start();
         }
     }

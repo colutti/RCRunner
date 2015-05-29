@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Threading;
 
 namespace RCRunner
@@ -14,15 +15,29 @@ namespace RCRunner
    /// </summary>
     public class TestCaseRunner
     {
+        /// <summary>
+        /// Name of the test cases to run
+        /// </summary>
         private readonly TestMethod _testCase;
+        /// <summary>
+        /// Main object that runs test cases
+        /// </summary>
         private readonly ITestFrameworkRunner _testFrameworkRunner;
+        /// <summary>
+        /// Class to load plugins to execute events after a test run
+        /// </summary>
         private readonly PluginLoader _pluginLoader;
+        /// <summary>
+        /// Event fired when a test finishes executing
+        /// </summary>
         public event TestRunFinishedDelegate TestRunFinished;
 
+        /// <summary>
+        /// Method that will be called when a test finishes executing
+        /// </summary>
+        /// <param name="exception">The object that represents a test cases run error</param>
         protected virtual void OnTestRunFinished(Exception exception)
         {
-            var handler = TestRunFinished;
-
             if (exception != null)
             {
                 _testCase.TestExecutionStatus = TestExecutionStatus.Failed;
@@ -34,33 +49,37 @@ namespace RCRunner
                 _testCase.LastExecutionErrorMsg = string.Empty;
             }
 
-            if (handler != null) handler(_testCase);
+            if (TestRunFinished != null) TestRunFinished(_testCase);
         }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="testCase">Name of the test cases to run</param>
+        /// <param name="testFrameworkRunner">Main object that runs test cases</param>
+        /// <param name="pluginLoader">Class to load plugins to execute events after a test run</param>
         public TestCaseRunner(TestMethod testCase, ITestFrameworkRunner testFrameworkRunner, PluginLoader pluginLoader)
         {
+            Debug.Assert(testCase != null);
+            Debug.Assert(testFrameworkRunner != null);
+            Debug.Assert(pluginLoader != null);
             _testCase = testCase;
             _testFrameworkRunner = testFrameworkRunner;
             _pluginLoader = pluginLoader;
         }
-
-        private void RunTestExecutionPlugins(string testCase)
-        {
-            if (_pluginLoader == null) return;
-
-            foreach (var testExecution in _pluginLoader.TestExecutionPlugiList)
-            {
-                testExecution.AfterTestExecution(testCase);
-            }
-        }
-
+        
+        /// <summary>
+        /// Main method that will be executed to run a test case
+        /// </summary>
         public void DoWork()
         {
             var t = new Thread(DoWorkCore);
-            t.SetApartmentState(ApartmentState.STA);
             t.Start();
         }
 
+        /// <summary>
+        /// Executes a test case
+        /// </summary>
         private void DoWorkCore()
         {
             try
@@ -72,7 +91,7 @@ namespace RCRunner
                 }
                 finally
                 {
-                    RunTestExecutionPlugins(_testCase.DisplayName);
+                    _pluginLoader.RunTestExecutionPlugins(_testCase.DisplayName);
                 }
             }
             catch (Exception exception)

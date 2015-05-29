@@ -62,7 +62,7 @@ namespace RCRunner
             if (handler != null) handler(testcasemethod);
         }
 
-        protected virtual void OnMethodStatusChanged(TestMethod testcasemethod)
+        protected virtual void OnTestCaseStatusChanged(TestMethod testcasemethod)
         {
             StatusChanged(testcasemethod);
         }
@@ -71,8 +71,8 @@ namespace RCRunner
         {
             _testCasesThreadRunner = new TestCasesController();
             TestClassesList = new List<TestMethod>();
-            _testCasesThreadRunner.Finished += OnTaskFinishedEvent;
-            _testCasesThreadRunner.MethodStatusChanged += OnMethodStatusChanged;
+            _testCasesThreadRunner.TestRunFinished += OnTaskTestRunFinishedEvent;
+            _testCasesThreadRunner.TestCaseStatusChanged += OnTestCaseStatusChanged;
             _testCasesThreadRunner.Canceled += CheckTasksCanceled;
             _canceled = false;
         }
@@ -151,7 +151,7 @@ namespace RCRunner
             _testCasesThreadRunner.DoWork(testCasesList);
         }
 
-        private void OnTaskFinishedEvent(TestMethod testcaseMethod)
+        private void OnTaskTestRunFinishedEvent(TestMethod testcaseMethod)
         {
             OnOnTestFinished(testcaseMethod);
         }
