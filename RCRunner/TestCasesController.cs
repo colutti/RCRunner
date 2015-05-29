@@ -3,14 +3,13 @@ using System.Threading;
 
 namespace RCRunner
 {
-
-    public class TestCasesThreadRunner
+    public class TestCasesController
     {
         private List<TestMethod> _testCasesList;
 
-        public event TestMethodEventHandler Finished;
+        public event TestRunFinishedDelegate Finished;
 
-        public event TestMethodEventHandler MethodStatusChanged;
+        public event TestRunFinishedDelegate MethodStatusChanged;
 
         private ITestFrameworkRunner _testFrameworkRunner;
 
@@ -43,13 +42,13 @@ namespace RCRunner
             if (handler != null) handler(testcasemethod);
         }
 
-        private void OnTaskFinishedEvent(TestMethod testcaseMethod)
+        private void OnTaskTestRunFinishedEvent(TestMethod testcaseMethod)
         {
             _totRunningScripts--;
             OnFinished(testcaseMethod);
         }
 
-        public TestCasesThreadRunner()
+        public TestCasesController()
         {
             _pluginLoader = new PluginLoader();
             _pluginLoader.LoadTestExecutionPlugins();
@@ -77,8 +76,8 @@ namespace RCRunner
                 if (OnCanceled()) return;
                 testMethod.TestExecutionStatus = TestExecutionStatus.Running;
                 OnMethodStatusChanged(testMethod);
-                var task = new TestCaseTaskThread(testMethod, _testFrameworkRunner, _pluginLoader);
-                task.Finished += OnTaskFinishedEvent;
+                var task = new TestCaseRunner(testMethod, _testFrameworkRunner, _pluginLoader);
+                task.TestRunFinished += OnTaskTestRunFinishedEvent;
                 task.DoWork();
             }
         }

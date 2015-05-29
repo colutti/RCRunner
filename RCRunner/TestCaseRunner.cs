@@ -3,20 +3,25 @@ using System.Threading;
 
 namespace RCRunner
 {
-    public delegate void TestMethodEventHandler(TestMethod testcaseMethod);
+    /// <summary>
+    /// Delegate that defines an event that will be called after a test runs
+    /// </summary>
+    /// <param name="testcaseMethod">Name of the test case</param>
+    public delegate void TestRunFinishedDelegate(TestMethod testcaseMethod);
 
-    public delegate void ActionMachine(string machineName);
-
-    public class TestCaseTaskThread
+   /// <summary>
+   /// Class that runs an automated test case in a thread
+   /// </summary>
+    public class TestCaseRunner
     {
         private readonly TestMethod _testCase;
         private readonly ITestFrameworkRunner _testFrameworkRunner;
         private readonly PluginLoader _pluginLoader;
-        public event TestMethodEventHandler Finished;
+        public event TestRunFinishedDelegate TestRunFinished;
 
-        protected virtual void OnFinished(Exception exception)
+        protected virtual void OnTestRunFinished(Exception exception)
         {
-            var handler = Finished;
+            var handler = TestRunFinished;
 
             if (exception != null)
             {
@@ -32,7 +37,7 @@ namespace RCRunner
             if (handler != null) handler(_testCase);
         }
 
-        public TestCaseTaskThread(TestMethod testCase, ITestFrameworkRunner testFrameworkRunner, PluginLoader pluginLoader)
+        public TestCaseRunner(TestMethod testCase, ITestFrameworkRunner testFrameworkRunner, PluginLoader pluginLoader)
         {
             _testCase = testCase;
             _testFrameworkRunner = testFrameworkRunner;
@@ -41,6 +46,8 @@ namespace RCRunner
 
         private void RunTestExecutionPlugins(string testCase)
         {
+            if (_pluginLoader == null) return;
+
             foreach (var testExecution in _pluginLoader.TestExecutionPlugiList)
             {
                 testExecution.AfterTestExecution(testCase);
@@ -61,7 +68,7 @@ namespace RCRunner
                 try
                 {
                     _testFrameworkRunner.RunTest(_testCase.DisplayName);
-                    OnFinished(null);
+                    OnTestRunFinished(null);
                 }
                 finally
                 {
@@ -70,7 +77,7 @@ namespace RCRunner
             }
             catch (Exception exception)
             {
-                OnFinished(exception);
+                OnTestRunFinished(exception);
             }
         }
     }

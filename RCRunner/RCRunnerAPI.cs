@@ -30,11 +30,11 @@ namespace RCRunner
     {
         public readonly List<TestMethod> TestClassesList;
 
-        private readonly TestCasesThreadRunner _testCasesThreadRunner;
+        private readonly TestCasesController _testCasesThreadRunner;
 
-        public event TestMethodEventHandler OnTestFinished;
+        public event TestRunFinishedDelegate OnTestFinished;
 
-        public event TestMethodEventHandler MethodStatusChanged;
+        public event TestRunFinishedDelegate MethodStatusChanged;
 
         private ITestFrameworkRunner _testFrameworkRunner;
 
@@ -69,7 +69,7 @@ namespace RCRunner
 
         public RCRunnerAPI()
         {
-            _testCasesThreadRunner = new TestCasesThreadRunner();
+            _testCasesThreadRunner = new TestCasesController();
             TestClassesList = new List<TestMethod>();
             _testCasesThreadRunner.Finished += OnTaskFinishedEvent;
             _testCasesThreadRunner.MethodStatusChanged += OnMethodStatusChanged;

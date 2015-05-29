@@ -71,8 +71,8 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RCRunnerAPI.cs" />
-    <Compile Include="TestCasesThreadRunner.cs" />
-    <Compile Include="TestCaseTaskThread.cs" />
+    <Compile Include="TestCasesController.cs" />
+    <Compile Include="TestCaseRunner.cs" />
     <Compile Include="vstst.cs" />
     <EmbeddedResource Include="frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
