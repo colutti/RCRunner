@@ -114,7 +114,6 @@ namespace RCRunner
             {
                 try
                 {
-                    Thread.Sleep(5000);
                     _testFrameworkRunner.RunTest(Name);
                     OnTestRunFinished(null);
                 }
