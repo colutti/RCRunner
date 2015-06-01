@@ -23,6 +23,29 @@ namespace RCRunner
         public TestExecutionStatus TestExecutionStatus;
         public string TestDescription;
     }
+
+    public class RunningTestsCount
+    {
+        public int TotRunning;
+        public int TotFailed;
+        public int TotPassed;
+        public int TotActive;
+        public int TotWaiting;
+
+        public void Reset()
+        {
+            TotActive = 0;
+            TotFailed = 0;
+            TotPassed = 0;
+            TotRunning = 0;
+            TotWaiting = 0;
+        }
+
+        public RunningTestsCount()
+        {
+            Reset();
+        }
+    }
     
     public delegate bool CheckCanceled();
 
@@ -30,7 +53,7 @@ namespace RCRunner
     {
         public readonly List<TestMethod> TestClassesList;
 
-        private readonly TestCasesController _testCasesThreadRunner;
+        private readonly TestCasesController _testCasesController;
 
         public event TestRunFinishedDelegate OnTestFinished;
 
@@ -39,6 +62,8 @@ namespace RCRunner
         private ITestFrameworkRunner _testFrameworkRunner;
 
         private bool _canceled;
+
+        private readonly RunningTestsCount _runningTestsCount;
 
         private bool CheckTasksCanceled()
         {
@@ -69,18 +94,19 @@ namespace RCRunner
 
         public RCRunnerAPI()
         {
-            _testCasesThreadRunner = new TestCasesController();
+            _runningTestsCount = new RunningTestsCount();
+            _testCasesController = new TestCasesController();
             TestClassesList = new List<TestMethod>();
-            _testCasesThreadRunner.TestRunFinished += OnTaskTestRunFinishedEvent;
-            _testCasesThreadRunner.TestCaseStatusChanged += OnTestCaseStatusChanged;
-            _testCasesThreadRunner.Canceled += CheckTasksCanceled;
+            _testCasesController.TestRunFinished += OnTaskTestRunFinishedEvent;
+            _testCasesController.TestCaseStatusChanged += OnTestCaseStatusChanged;
+            _testCasesController.Canceled += CheckTasksCanceled;
             _canceled = false;
         }
 
          public void SetTestRunner(ITestFrameworkRunner testFrameworkRunner)
         {
             _testFrameworkRunner = testFrameworkRunner;
-            _testCasesThreadRunner.SetTestRunner(testFrameworkRunner);
+            _testCasesController.SetTestRunner(testFrameworkRunner);
         }
 
         private string GetDescriptionAttributeValue(MemberInfo methodInfo)
@@ -146,9 +172,9 @@ namespace RCRunner
 
         public void RunTestCases(List<TestMethod> testCasesList)
         {
-
+            _runningTestsCount.Reset();
             _canceled = false;
-            _testCasesThreadRunner.DoWork(testCasesList);
+            _testCasesController.DoWork(testCasesList);
         }
 
         private void OnTaskTestRunFinishedEvent(TestMethod testcaseMethod)
