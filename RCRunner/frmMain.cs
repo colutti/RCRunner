@@ -23,10 +23,6 @@ namespace RCRunner
         private readonly Color _testRunning = Color.Blue;
         private readonly Color _testWaiting = Color.DarkOrange;
         private ITestFrameworkRunner _testFrameworkRunner;
-        private int _totFailedTestScripts;
-        private int _totPassedTestScripts;
-        private int _totRunningTestScripts;
-        private int _totWaitingTestScripts;
 
         public FrmMain()
         {
@@ -37,6 +33,7 @@ namespace RCRunner
             _rcRunner = new RCRunnerAPI();
             _rcRunner.OnTestFinished += OnTaskFinishedEvent;
             _rcRunner.MethodStatusChanged += OnMethodStatusChanged;
+            _rcRunner.OnTestExecutionFinished += OnTestExecutionFinished;
 
             trvTestCases.CheckBoxes = true;
 
@@ -68,15 +65,11 @@ namespace RCRunner
 
         private void ResetTestExecution()
         {
-            _totFailedTestScripts = 0;
-            _totPassedTestScripts = 0;
-            _totRunningTestScripts = 0;
-            _totWaitingTestScripts = 0;
             prgrsbrTestProgress.Maximum = 0;
-            lblPassedScripts.Text = @"Passed scripts: " + _totPassedTestScripts;
-            lblFailedScripts.Text = @"Failed scripts: " + _totFailedTestScripts;
-            lblRunningScripts.Text = @"Running scripts: " + _totRunningTestScripts;
-            lblWatingScripts.Text = @"Waiting scripts: " + _totWaitingTestScripts;
+            lblPassedScripts.Text = @"Passed scripts: 0";
+            lblFailedScripts.Text = @"Failed scripts: 0";
+            lblRunningScripts.Text = @"Running scripts: 0";
+            lblWatingScripts.Text = @"Waiting scripts: 0";
         }
 
         private static void CheckTreeViewNode(TreeNode node, Boolean isChecked)
@@ -148,10 +141,10 @@ namespace RCRunner
             }
             else
             {
-                lblPassedScripts.Text = @"Passed scripts: " + _totPassedTestScripts;
-                lblFailedScripts.Text = @"Failed scripts: " + _totFailedTestScripts;
-                lblRunningScripts.Text = @"Running scripts: " + _totRunningTestScripts;
-                lblWatingScripts.Text = @"Waiting scripts: " + _totWaitingTestScripts;
+                lblPassedScripts.Text = @"Passed scripts: " + _rcRunner.RunningTestsCount.TotPassed;
+                lblFailedScripts.Text = @"Failed scripts: " + _rcRunner.RunningTestsCount.TotFailed;
+                lblRunningScripts.Text = @"Running scripts: " + _rcRunner.RunningTestsCount.TotRunning;
+                lblWatingScripts.Text = @"Waiting scripts: " + _rcRunner.RunningTestsCount.TotWaiting;
             }
         }
 
@@ -174,6 +167,11 @@ namespace RCRunner
             }
         }
 
+        private void OnTestExecutionFinished()
+        {
+            DisableOrEnableControls(true); 
+        }
+
         private void OnTaskFinishedEvent(TestMethod testcaseMethod)
         {
             UpdateTreeview(testcaseMethod);
@@ -182,7 +180,6 @@ namespace RCRunner
 
             if (status == TestExecutionStatus.Failed || status == TestExecutionStatus.Passed)
             {
-                _totRunningTestScripts--;
                 if (prgrsbrTestProgress.InvokeRequired)
                 {
                     Action d = prgrsbrTestProgress.PerformStep;
@@ -194,22 +191,7 @@ namespace RCRunner
                 }
             }
 
-            if (status == TestExecutionStatus.Running)
-            {
-                _totRunningTestScripts++;
-                _totWaitingTestScripts--;
-            }
-
-            if (status == TestExecutionStatus.Failed) _totFailedTestScripts++;
-            if (status == TestExecutionStatus.Passed) _totPassedTestScripts++;
-
-            if (status == TestExecutionStatus.Waiting) _totWaitingTestScripts++;
-
             UpdateLblTestScripts(testcaseMethod);
-
-            if (_totRunningTestScripts > 0 || _totWaitingTestScripts > 0) return;
-
-            DisableOrEnableControls(true);
         }
 
         private static string CreateTestResultsFolder()

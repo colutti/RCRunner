@@ -71,6 +71,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RCRunnerAPI.cs" />
+    <Compile Include="RunningTestsCount.cs" />
     <Compile Include="TestCasesController.cs" />
     <Compile Include="TestCaseRunner.cs" />
     <Compile Include="vstst.cs" />

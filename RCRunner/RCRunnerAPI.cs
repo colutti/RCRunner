@@ -5,6 +5,8 @@ using System.Reflection;
 
 namespace RCRunner
 {
+    public delegate bool CheckCanceled();
+    
     public enum TestExecutionStatus
     {
         Failed,
@@ -13,7 +15,7 @@ namespace RCRunner
         Waiting,
         Running,
     }
-    
+
     public class TestMethod
     {
         public string ClassName;
@@ -23,31 +25,6 @@ namespace RCRunner
         public TestExecutionStatus TestExecutionStatus;
         public string TestDescription;
     }
-
-    public class RunningTestsCount
-    {
-        public int TotRunning;
-        public int TotFailed;
-        public int TotPassed;
-        public int TotActive;
-        public int TotWaiting;
-
-        public void Reset()
-        {
-            TotActive = 0;
-            TotFailed = 0;
-            TotPassed = 0;
-            TotRunning = 0;
-            TotWaiting = 0;
-        }
-
-        public RunningTestsCount()
-        {
-            Reset();
-        }
-    }
-    
-    public delegate bool CheckCanceled();
 
     public class RCRunnerAPI
     {
@@ -59,11 +36,19 @@ namespace RCRunner
 
         public event TestRunFinishedDelegate MethodStatusChanged;
 
+        public event Action OnTestExecutionFinished;
+
+        protected virtual void OnOnTestExecutionFinished()
+        {
+            var handler = OnTestExecutionFinished;
+            if (handler != null) handler();
+        }
+
         private ITestFrameworkRunner _testFrameworkRunner;
 
         private bool _canceled;
 
-        private readonly RunningTestsCount _runningTestsCount;
+        public readonly RunningTestsCount RunningTestsCount;
 
         private bool CheckTasksCanceled()
         {
@@ -75,35 +60,27 @@ namespace RCRunner
             _canceled = true;
         }
 
-        protected virtual void StatusChanged(TestMethod testcasemethod)
-        {
-            var handler = MethodStatusChanged;
-            if (handler != null) handler(testcasemethod);
-        }
-
         protected virtual void OnOnTestFinished(TestMethod testcasemethod)
         {
-            var handler = OnTestFinished;
-            if (handler != null) handler(testcasemethod);
-        }
+            RunningTestsCount.Update(testcasemethod);
 
-        protected virtual void OnTestCaseStatusChanged(TestMethod testcasemethod)
-        {
-            StatusChanged(testcasemethod);
+            if (OnTestFinished != null) OnTestFinished(testcasemethod);
+
+            if (RunningTestsCount.Done()) OnOnTestExecutionFinished();
         }
 
         public RCRunnerAPI()
         {
-            _runningTestsCount = new RunningTestsCount();
+            RunningTestsCount = new RunningTestsCount();
             _testCasesController = new TestCasesController();
             TestClassesList = new List<TestMethod>();
             _testCasesController.TestRunFinished += OnTaskTestRunFinishedEvent;
-            _testCasesController.TestCaseStatusChanged += OnTestCaseStatusChanged;
+            _testCasesController.TestCaseStatusChanged += MethodStatusChanged;
             _testCasesController.Canceled += CheckTasksCanceled;
             _canceled = false;
         }
 
-         public void SetTestRunner(ITestFrameworkRunner testFrameworkRunner)
+        public void SetTestRunner(ITestFrameworkRunner testFrameworkRunner)
         {
             _testFrameworkRunner = testFrameworkRunner;
             _testCasesController.SetTestRunner(testFrameworkRunner);
@@ -123,7 +100,7 @@ namespace RCRunner
 
             if (descriptionProperty != null)
             {
-                description = descriptionProperty.GetValue(descriptionAttr, null) as string;    
+                description = descriptionProperty.GetValue(descriptionAttr, null) as string;
             }
 
             return description;
@@ -172,7 +149,7 @@ namespace RCRunner
 
         public void RunTestCases(List<TestMethod> testCasesList)
         {
-            _runningTestsCount.Reset();
+            RunningTestsCount.Reset();
             _canceled = false;
             _testCasesController.DoWork(testCasesList);
         }
