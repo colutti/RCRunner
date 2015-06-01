@@ -7,30 +7,11 @@ namespace RCRunner
 {
     public delegate bool CheckCanceled();
     
-    public enum TestExecutionStatus
-    {
-        Failed,
-        Passed,
-        Active,
-        Waiting,
-        Running,
-    }
-
-    public class TestMethod
-    {
-        public string ClassName;
-        public MethodInfo Method;
-        public string DisplayName;
-        public string LastExecutionErrorMsg;
-        public TestExecutionStatus TestExecutionStatus;
-        public string TestDescription;
-    }
-
     public class RCRunnerAPI
     {
-        public readonly List<TestMethod> TestClassesList;
+        public readonly List<TestScript> TestClassesList;
 
-        private readonly TestCasesController _testCasesController;
+        private readonly TestScriptsController _testCasesController;
 
         public event TestRunFinishedDelegate OnTestFinished;
 
@@ -40,8 +21,13 @@ namespace RCRunner
 
         protected virtual void OnOnTestExecutionFinished()
         {
-            var handler = OnTestExecutionFinished;
-            if (handler != null) handler();
+            if (OnTestExecutionFinished != null) OnTestExecutionFinished();
+        }
+
+        public void OnMethodStatusChanged(TestScript testcaseScript)
+        {
+            RunningTestsCount.Update(testcaseScript);
+            if (MethodStatusChanged != null) MethodStatusChanged(testcaseScript);
         }
 
         private ITestFrameworkRunner _testFrameworkRunner;
@@ -60,7 +46,7 @@ namespace RCRunner
             _canceled = true;
         }
 
-        protected virtual void OnOnTestFinished(TestMethod testcasemethod)
+        protected virtual void OnOnTestFinished(TestScript testcasemethod)
         {
             RunningTestsCount.Update(testcasemethod);
 
@@ -72,10 +58,10 @@ namespace RCRunner
         public RCRunnerAPI()
         {
             RunningTestsCount = new RunningTestsCount();
-            _testCasesController = new TestCasesController();
-            TestClassesList = new List<TestMethod>();
+            _testCasesController = new TestScriptsController();
+            TestClassesList = new List<TestScript>();
             _testCasesController.TestRunFinished += OnTaskTestRunFinishedEvent;
-            _testCasesController.TestCaseStatusChanged += MethodStatusChanged;
+            _testCasesController.TestCaseStatusChanged += OnMethodStatusChanged;
             _testCasesController.Canceled += CheckTasksCanceled;
             _canceled = false;
         }
@@ -133,11 +119,10 @@ namespace RCRunner
 
                 var className = classes.Name;
 
-                foreach (var testMethod in methodInfos.Select(methodInfo => new TestMethod
+                foreach (var testMethod in methodInfos.Select(methodInfo => new TestScript
                 {
                     ClassName = className,
-                    Method = methodInfo,
-                    DisplayName = methodInfo.Name,
+                    Name = methodInfo.Name,
                     TestExecutionStatus = TestExecutionStatus.Active,
                     LastExecutionErrorMsg = string.Empty,
                     TestDescription = GetDescriptionAttributeValue(methodInfo)
@@ -147,16 +132,16 @@ namespace RCRunner
             }
         }
 
-        public void RunTestCases(List<TestMethod> testCasesList)
+        public void RunTestCases(List<TestScript> testCasesList)
         {
             RunningTestsCount.Reset();
             _canceled = false;
             _testCasesController.DoWork(testCasesList);
         }
 
-        private void OnTaskTestRunFinishedEvent(TestMethod testcaseMethod)
+        private void OnTaskTestRunFinishedEvent(TestScript testcaseScript)
         {
-            OnOnTestFinished(testcaseMethod);
+            OnOnTestFinished(testcaseScript);
         }
 
     }

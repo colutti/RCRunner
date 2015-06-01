@@ -42,7 +42,7 @@ namespace RCRunner
         /// Update the count properties based on the status of a testmethod
         /// </summary>
         /// <param name="testcasemethod"></param>
-        public void Update(TestMethod testcasemethod)
+        public void Update(TestScript testcasemethod)
         {
             switch (testcasemethod.TestExecutionStatus)
             {

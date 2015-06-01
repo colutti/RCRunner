@@ -12,7 +12,7 @@ namespace RCRunner
     public partial class FrmMain : Form
     {
         private readonly RCRunnerAPI _rcRunner;
-        private delegate void SetTextCallback(TestMethod testcaseMethod);
+        private delegate void SetTextCallback(TestScript testcaseScript);
         private delegate void SetEnabledCallback(bool enabled);
 
         private PluginLoader _pluginLoader;
@@ -85,9 +85,9 @@ namespace RCRunner
             }
         }
 
-        private void PaintTreeNodeBasedOnTestStatus(TestMethod testcaseMethod, TreeNode node)
+        private void PaintTreeNodeBasedOnTestStatus(TestScript testcaseScript, TreeNode node)
         {
-            switch (testcaseMethod.TestExecutionStatus)
+            switch (testcaseScript.TestExecutionStatus)
             {
                 case TestExecutionStatus.Active:
                     node.ForeColor = _testActive;
@@ -107,13 +107,13 @@ namespace RCRunner
             }
         }
 
-        private TreeNode FindNodebyTest(TestMethod testcaseMethod)
+        private TreeNode FindNodebyTest(TestScript testcaseScript)
         {
             TreeNode nodeFound = null;
 
             foreach (TreeNode node in trvTestCases.Nodes)
             {
-                foreach (var child in node.Nodes.Cast<TreeNode>().Where(child => child.Tag == testcaseMethod))
+                foreach (var child in node.Nodes.Cast<TreeNode>().Where(child => child.Tag == testcaseScript))
                 {
                     nodeFound = child;
                     break;
@@ -122,22 +122,22 @@ namespace RCRunner
             return nodeFound;
         }
 
-        private TreeNode FindNodebyClassName(TestMethod testcaseMethod)
+        private TreeNode FindNodebyClassName(TestScript testcaseScript)
         {
-            return trvTestCases.Nodes.Cast<TreeNode>().FirstOrDefault(node => node.Text.Equals(testcaseMethod.ClassName));
+            return trvTestCases.Nodes.Cast<TreeNode>().FirstOrDefault(node => node.Text.Equals(testcaseScript.ClassName));
         }
 
-        private void OnMethodStatusChanged(TestMethod testcasemethod)
+        private void OnMethodStatusChanged(TestScript testcasemethod)
         {
             OnTaskFinishedEvent(testcasemethod);
         }
 
-        private void UpdateLblTestScripts(TestMethod testcaseMethod)
+        private void UpdateLblTestScripts(TestScript testcaseScript)
         {
             if (lblPassedScripts.InvokeRequired)
             {
                 var d = new SetTextCallback(UpdateLblTestScripts);
-                Invoke(d, new object[] { testcaseMethod });
+                Invoke(d, new object[] { testcaseScript });
             }
             else
             {
@@ -148,18 +148,18 @@ namespace RCRunner
             }
         }
 
-        private void UpdateTreeview(TestMethod testcaseMethod)
+        private void UpdateTreeview(TestScript testcaseScript)
         {
             if (trvTestCases.InvokeRequired)
             {
                 var d = new SetTextCallback(UpdateTreeview);
-                Invoke(d, new object[] { testcaseMethod });
+                Invoke(d, new object[] { testcaseScript });
             }
             else
             {
-                var nodeFound = FindNodebyTest(testcaseMethod);
+                var nodeFound = FindNodebyTest(testcaseScript);
                 if (nodeFound == null) return;
-                PaintTreeNodeBasedOnTestStatus(testcaseMethod, nodeFound);
+                PaintTreeNodeBasedOnTestStatus(testcaseScript, nodeFound);
                 if (trvTestCases.SelectedNode != null)
                 {
                     trvTestCases_AfterSelect(trvTestCases.SelectedNode, null);
@@ -172,11 +172,11 @@ namespace RCRunner
             DisableOrEnableControls(true); 
         }
 
-        private void OnTaskFinishedEvent(TestMethod testcaseMethod)
+        private void OnTaskFinishedEvent(TestScript testcaseScript)
         {
-            UpdateTreeview(testcaseMethod);
+            UpdateTreeview(testcaseScript);
 
-            var status = testcaseMethod.TestExecutionStatus;
+            var status = testcaseScript.TestExecutionStatus;
 
             if (status == TestExecutionStatus.Failed || status == TestExecutionStatus.Passed)
             {
@@ -191,7 +191,7 @@ namespace RCRunner
                 }
             }
 
-            UpdateLblTestScripts(testcaseMethod);
+            UpdateLblTestScripts(testcaseScript);
         }
 
         private static string CreateTestResultsFolder()
@@ -211,9 +211,9 @@ namespace RCRunner
         {
             var node = trvTestCases.SelectedNode;
             if (node == null) return;
-            if (!(node.Tag is TestMethod)) return;
+            if (!(node.Tag is TestScript)) return;
 
-            var testMethod = node.Tag as TestMethod;
+            var testMethod = node.Tag as TestScript;
             txtbxTestDescription.Text = testMethod.TestDescription;
             lblTestStatus.Text = @"Test Status: " + testMethod.TestExecutionStatus;
             switch (testMethod.TestExecutionStatus)
@@ -238,7 +238,7 @@ namespace RCRunner
             txtbxTestError.Text = testMethod.LastExecutionErrorMsg;
         }
 
-        private void LoadTreeView(IEnumerable<TestMethod> testClassesList)
+        private void LoadTreeView(IEnumerable<TestScript> testClassesList)
         {
             trvTestCases.BeginUpdate();
             trvTestCases.Nodes.Clear();
@@ -247,7 +247,7 @@ namespace RCRunner
                 foreach (var testMethod in testClassesList)
                 {
                     var classNode = FindNodebyClassName(testMethod) ?? trvTestCases.Nodes.Add(testMethod.ClassName);
-                    var methodNode = classNode.Nodes.Add(testMethod.Method.Name);
+                    var methodNode = classNode.Nodes.Add(testMethod.Name);
                     methodNode.Tag = testMethod;
                     PaintTreeNodeBasedOnTestStatus(testMethod, methodNode);
                 }
@@ -319,11 +319,11 @@ namespace RCRunner
 
             prgrsbrTestProgress.Maximum = TreeviewCountCheckedNodes(trvTestCases.Nodes);
 
-            var testCasesList = new List<TestMethod>();
+            var testCasesList = new List<TestScript>();
 
             foreach (TreeNode node in trvTestCases.Nodes)
             {
-                testCasesList.AddRange(from TreeNode child in node.Nodes where child.Checked where child.Tag is TestMethod select child.Tag as TestMethod);
+                testCasesList.AddRange(from TreeNode child in node.Nodes where child.Checked where child.Tag is TestScript select child.Tag as TestScript);
             }
 
             if (testCasesList.Any())
@@ -361,7 +361,7 @@ namespace RCRunner
 
         private void cmbxFilter_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            IEnumerable<TestMethod> testClassesList;
+            IEnumerable<TestScript> testClassesList;
             switch (cmbxFilter.SelectedIndex)
             {
                 case 1:

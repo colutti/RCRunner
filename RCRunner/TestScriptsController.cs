@@ -3,7 +3,7 @@ using System.Threading;
 
 namespace RCRunner
 {
-    public class TestCasesController
+    public class TestScriptsController
     {
         /// <summary>
         /// Event fired when a test finishes executing
@@ -20,19 +20,17 @@ namespace RCRunner
         /// <summary>
         /// List of the test cases to run
         /// </summary>
-        private List<TestMethod> _testCasesList;
-        /// <summary>
-        /// Main object that runs test cases
-        /// </summary>
-        private ITestFrameworkRunner _testFrameworkRunner;
+        private List<TestScript> _testCasesList;
+
         /// <summary>
         /// Total of running test scripts
         /// </summary>
         private int _totRunningScripts;
+
         /// <summary>
-        /// Class to load plugins to execute events after a test run
+        /// Main object that runs test cases
         /// </summary>
-        private readonly PluginLoader _pluginLoader;
+        private ITestFrameworkRunner _testFrameworkRunner;
 
         /// <summary>
         /// Check if the test run was canceled by the user
@@ -45,19 +43,10 @@ namespace RCRunner
         }
 
         /// <summary>
-        /// Set for the _testFrameworkRunner field
-        /// </summary>
-        /// <param name="testFrameworkRunner"></param>
-        public void SetTestRunner(ITestFrameworkRunner testFrameworkRunner)
-        {
-            _testFrameworkRunner = testFrameworkRunner;
-        }
-
-        /// <summary>
         /// Method to call the TestCaseStatusChanged event when a test changes its status (running, waiting, etc) 
         /// </summary>
         /// <param name="testcasemethod">The method whom status have changed</param>
-        protected virtual void OnMethodStatusChanged(TestMethod testcasemethod)
+        protected virtual void OnMethodStatusChanged(TestScript testcasemethod)
         {
             var handler = TestCaseStatusChanged;
             if (handler != null) handler(testcasemethod);
@@ -66,19 +55,19 @@ namespace RCRunner
         /// <summary>
         /// Method called by the TestCaseRunner when a test finishes
         /// </summary>
-        /// <param name="testcaseMethod"></param>
-        private void OnTaskTestRunFinishedEvent(TestMethod testcaseMethod)
+        /// <param name="testcaseScript"></param>
+        private void OnTaskTestRunFinishedEvent(TestScript testcaseScript)
         {
             _totRunningScripts--;
         }
 
         /// <summary>
-        /// Constructor
+        /// Set for the _testFrameworkRunner property
         /// </summary>
-        public TestCasesController()
+        /// <param name="testFrameworkRunner"></param>
+        public void SetTestRunner(ITestFrameworkRunner testFrameworkRunner)
         {
-            _pluginLoader = new PluginLoader();
-            _pluginLoader.LoadTestExecutionPlugins();
+            _testFrameworkRunner = testFrameworkRunner;
         }
 
         /// <summary>
@@ -104,12 +93,12 @@ namespace RCRunner
 
                 _totRunningScripts++;
                 if (OnCanceled()) return;
+                testMethod.SetTestRunner(_testFrameworkRunner);
                 testMethod.TestExecutionStatus = TestExecutionStatus.Running;
                 OnMethodStatusChanged(testMethod);
-                var task = new TestCaseRunner(testMethod, _testFrameworkRunner, _pluginLoader);
-                task.TestRunFinished += OnTaskTestRunFinishedEvent;
-                task.TestRunFinished += TestRunFinished;
-                task.DoWork();
+                testMethod.TestRunFinished += OnTaskTestRunFinishedEvent;
+                testMethod.TestRunFinished += TestRunFinished;
+                testMethod.DoWork();
             }
         }
 
@@ -117,7 +106,7 @@ namespace RCRunner
         /// Method that will call DoWorkCore to run all the tests in testCasesList in a thread
         /// </summary>
         /// <param name="testCasesList">The list of test cases to run</param>
-        public void DoWork(List<TestMethod> testCasesList)
+        public void DoWork(List<TestScript> testCasesList)
         {
             _testCasesList = testCasesList;
             var t = new Thread(DoWorkCore);
