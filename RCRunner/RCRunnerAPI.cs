@@ -52,7 +52,7 @@ namespace RCRunner
 
             if (OnTestFinished != null) OnTestFinished(testcasemethod);
 
-            if (RunningTestsCount.Done()) OnOnTestExecutionFinished();
+            if (RunningTestsCount.Done() || _canceled) OnOnTestExecutionFinished();
         }
 
         public RCRunnerAPI()
@@ -136,6 +136,13 @@ namespace RCRunner
         {
             RunningTestsCount.Reset();
             _canceled = false;
+
+            foreach (var testMethod in testCasesList)
+            {
+                testMethod.TestExecutionStatus = TestExecutionStatus.Waiting;
+                testMethod.LastExecutionErrorMsg = string.Empty;
+                OnMethodStatusChanged(testMethod);
+            }
             _testCasesController.DoWork(testCasesList);
         }
 

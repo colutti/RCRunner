@@ -109,17 +109,7 @@ namespace RCRunner
 
         private TreeNode FindNodebyTest(TestScript testcaseScript)
         {
-            TreeNode nodeFound = null;
-
-            foreach (TreeNode node in trvTestCases.Nodes)
-            {
-                foreach (var child in node.Nodes.Cast<TreeNode>().Where(child => child.Tag == testcaseScript))
-                {
-                    nodeFound = child;
-                    break;
-                }
-            }
-            return nodeFound;
+            return trvTestCases.Nodes.Cast<TreeNode>().SelectMany(node => node.Nodes.Cast<TreeNode>().Where(child => child.Tag == testcaseScript)).FirstOrDefault();
         }
 
         private TreeNode FindNodebyClassName(TestScript testcaseScript)
@@ -191,7 +181,7 @@ namespace RCRunner
                 }
             }
 
-            UpdateLblTestScripts(testcaseScript);
+           UpdateLblTestScripts(testcaseScript);
         }
 
         private static string CreateTestResultsFolder()

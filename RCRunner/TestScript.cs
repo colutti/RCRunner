@@ -114,12 +114,13 @@ namespace RCRunner
             {
                 try
                 {
-                    _testFrameworkRunner.RunTest(Name);
+                    Thread.Sleep(5000);
+                    //_testFrameworkRunner.RunTest(Name);
                     OnTestRunFinished(null);
                 }
                 finally
                 {
-                    _pluginLoader.RunTestExecutionPlugins(Name);
+                    //_pluginLoader.RunTestExecutionPlugins(Name);
                 }
             }
             catch (Exception exception)

@@ -79,13 +79,6 @@ namespace RCRunner
 
             foreach (var testMethod in _testCasesList)
             {
-                testMethod.TestExecutionStatus = TestExecutionStatus.Waiting;
-                testMethod.LastExecutionErrorMsg = string.Empty;
-                OnMethodStatusChanged(testMethod);
-            }
-
-            foreach (var testMethod in _testCasesList)
-            {
                 while (_totRunningScripts >= Properties.Settings.Default.MaxThreads)
                 {
                     if (OnCanceled()) return;
