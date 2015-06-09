@@ -236,7 +236,7 @@ namespace MSTestWrapper
         /// <returns>The name of the attribute that defines description for a test method</returns>
         public string GetTestMethodDescriptionAttribute()
         {
-            return typeof(DescriptionAttribute).FullName;
+            return typeof(Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute).FullName;
         }
 
         /// <summary>
