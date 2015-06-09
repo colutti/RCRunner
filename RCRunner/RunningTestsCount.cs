@@ -1,3 +1,5 @@
+using System.Threading;
+
 namespace RCRunner
 {
     public class RunningTestsCount
@@ -48,25 +50,25 @@ namespace RCRunner
             {
                 case TestExecutionStatus.Failed:
                 {
-                    TotRunning--;
-                    TotFailed++;
+                    Interlocked.Decrement(ref TotRunning);
+                    Interlocked.Increment(ref TotFailed);
                     break;
                 }
                 case TestExecutionStatus.Passed:
                 {
-                    TotRunning--;
-                    TotPassed++;
+                    Interlocked.Decrement(ref TotRunning);
+                    Interlocked.Increment(ref TotPassed);
                     break;
                 }
                 case TestExecutionStatus.Running:
                 {
-                    TotRunning++;
-                    TotWaiting--;
+                    Interlocked.Increment(ref TotRunning);
+                    Interlocked.Decrement(ref TotWaiting);
                     break;
                 }
                 case TestExecutionStatus.Waiting:
                 {
-                    TotWaiting++;
+                    Interlocked.Increment(ref TotWaiting);
                     break;
                 }
             }
