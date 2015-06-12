@@ -28,6 +28,10 @@ namespace RCRunner
         {
             InitializeComponent();
 
+            var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            // ReSharper disable once DoNotCallOverridableMethodsInConstructor
+            Text = String.Format("RC Test Script Runner version {0}", version);
+
             LoadTestRunners();
 
             _rcRunner = new RCRunnerAPI();
