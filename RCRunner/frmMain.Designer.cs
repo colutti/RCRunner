@@ -49,6 +49,9 @@
             this.label2 = new System.Windows.Forms.Label();
             this.txtbxTestDescription = new System.Windows.Forms.TextBox();
             this.panel5 = new System.Windows.Forms.Panel();
+            this.lblTotalScripts = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.cmbxAttributes = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.cmbxFilter = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -217,7 +220,7 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(0, 119);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1055, 487);
+            this.panel2.Size = new System.Drawing.Size(1055, 520);
             this.panel2.TabIndex = 11;
             // 
             // panel3
@@ -227,7 +230,7 @@
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3.Location = new System.Drawing.Point(319, 0);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(736, 487);
+            this.panel3.Size = new System.Drawing.Size(736, 520);
             this.panel3.TabIndex = 11;
             // 
             // panel7
@@ -238,7 +241,7 @@
             this.panel7.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel7.Location = new System.Drawing.Point(0, 111);
             this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(736, 376);
+            this.panel7.Size = new System.Drawing.Size(736, 409);
             this.panel7.TabIndex = 17;
             // 
             // txtbxTestError
@@ -253,7 +256,7 @@
             this.txtbxTestError.Multiline = true;
             this.txtbxTestError.Name = "txtbxTestError";
             this.txtbxTestError.ReadOnly = true;
-            this.txtbxTestError.Size = new System.Drawing.Size(719, 338);
+            this.txtbxTestError.Size = new System.Drawing.Size(719, 371);
             this.txtbxTestError.TabIndex = 17;
             // 
             // lblTestStatus
@@ -307,6 +310,9 @@
             // panel5
             // 
             this.panel5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(44)))));
+            this.panel5.Controls.Add(this.lblTotalScripts);
+            this.panel5.Controls.Add(this.label5);
+            this.panel5.Controls.Add(this.cmbxAttributes);
             this.panel5.Controls.Add(this.label1);
             this.panel5.Controls.Add(this.cmbxFilter);
             this.panel5.Controls.Add(this.label3);
@@ -314,8 +320,50 @@
             this.panel5.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel5.Location = new System.Drawing.Point(0, 0);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(319, 487);
+            this.panel5.Size = new System.Drawing.Size(319, 520);
             this.panel5.TabIndex = 10;
+            // 
+            // lblTotalScripts
+            // 
+            this.lblTotalScripts.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lblTotalScripts.AutoSize = true;
+            this.lblTotalScripts.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTotalScripts.ForeColor = System.Drawing.Color.White;
+            this.lblTotalScripts.Location = new System.Drawing.Point(9, 491);
+            this.lblTotalScripts.Name = "lblTotalScripts";
+            this.lblTotalScripts.Padding = new System.Windows.Forms.Padding(0, 5, 0, 0);
+            this.lblTotalScripts.Size = new System.Drawing.Size(47, 20);
+            this.lblTotalScripts.TabIndex = 12;
+            this.lblTotalScripts.Text = "Total: 0";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.ForeColor = System.Drawing.Color.White;
+            this.label5.Location = new System.Drawing.Point(9, 60);
+            this.label5.Name = "label5";
+            this.label5.Padding = new System.Windows.Forms.Padding(0, 5, 0, 0);
+            this.label5.Size = new System.Drawing.Size(57, 20);
+            this.label5.TabIndex = 11;
+            this.label5.Text = "Attributes";
+            // 
+            // cmbxAttributes
+            // 
+            this.cmbxAttributes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbxAttributes.FormattingEnabled = true;
+            this.cmbxAttributes.Items.AddRange(new object[] {
+            "Everything",
+            "Running Scripts",
+            "Wating Scripts",
+            "Failed Scripts",
+            "Passed Scripts",
+            "Active Scripts"});
+            this.cmbxAttributes.Location = new System.Drawing.Point(72, 63);
+            this.cmbxAttributes.Name = "cmbxAttributes";
+            this.cmbxAttributes.Size = new System.Drawing.Size(238, 21);
+            this.cmbxAttributes.TabIndex = 10;
+            this.cmbxAttributes.SelectionChangeCommitted += new System.EventHandler(this.cmbxAttributes_SelectionChangeCommitted);
             // 
             // label1
             // 
@@ -333,16 +381,9 @@
             // 
             this.cmbxFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbxFilter.FormattingEnabled = true;
-            this.cmbxFilter.Items.AddRange(new object[] {
-            "Everything",
-            "Running Scripts",
-            "Wating Scripts",
-            "Failed Scripts",
-            "Passed Scripts",
-            "Active Scripts"});
-            this.cmbxFilter.Location = new System.Drawing.Point(49, 30);
+            this.cmbxFilter.Location = new System.Drawing.Point(72, 30);
             this.cmbxFilter.Name = "cmbxFilter";
-            this.cmbxFilter.Size = new System.Drawing.Size(261, 21);
+            this.cmbxFilter.Size = new System.Drawing.Size(238, 21);
             this.cmbxFilter.TabIndex = 8;
             this.cmbxFilter.SelectionChangeCommitted += new System.EventHandler(this.cmbxFilter_SelectionChangeCommitted);
             // 
@@ -365,9 +406,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.trvTestCases.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(44)))));
             this.trvTestCases.ForeColor = System.Drawing.Color.White;
-            this.trvTestCases.Location = new System.Drawing.Point(12, 59);
+            this.trvTestCases.Location = new System.Drawing.Point(12, 94);
             this.trvTestCases.Name = "trvTestCases";
-            this.trvTestCases.Size = new System.Drawing.Size(298, 416);
+            this.trvTestCases.Size = new System.Drawing.Size(298, 395);
             this.trvTestCases.TabIndex = 2;
             this.trvTestCases.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.trvTestCases_AfterCheck);
             this.trvTestCases.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.trvTestCases_AfterSelect);
@@ -376,7 +417,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1055, 606);
+            this.ClientSize = new System.Drawing.Size(1055, 639);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel4);
             this.Controls.Add(this.panel1);
@@ -426,6 +467,9 @@
         private System.Windows.Forms.ComboBox cmbxFilter;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ComboBox cmbTestRunners;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.ComboBox cmbxAttributes;
+        private System.Windows.Forms.Label lblTotalScripts;
 
     }
 }

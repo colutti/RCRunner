@@ -6,7 +6,7 @@ using System.Reflection;
 namespace RCRunner
 {
     public delegate bool CheckCanceled();
-    
+
     public class RCRunnerAPI
     {
         public readonly List<TestScript> TestClassesList;
@@ -18,6 +18,8 @@ namespace RCRunner
         public event TestRunFinishedDelegate MethodStatusChanged;
 
         public event Action OnTestExecutionFinished;
+
+        public List<string> CustomAttributesList;
 
         protected virtual void OnOnTestExecutionFinished()
         {
@@ -60,6 +62,7 @@ namespace RCRunner
             RunningTestsCount = new RunningTestsCount();
             _testCasesController = new TestScriptsController();
             TestClassesList = new List<TestScript>();
+            CustomAttributesList = new List<string>();
             _testCasesController.TestRunFinished += OnTaskTestRunFinishedEvent;
             _testCasesController.TestCaseStatusChanged += OnMethodStatusChanged;
             _testCasesController.Canceled += CheckTasksCanceled;
@@ -103,11 +106,30 @@ namespace RCRunner
             return methodInfos;
         }
 
+        private List<string> GetCustomAttributes(MethodInfo method)
+        {
+            if (method == null) return null;
+
+            var testAttributeName = _testFrameworkRunner.GetTestMethodAttribute();
+
+            var descriptionAttributeName = _testFrameworkRunner.GetTestMethodDescriptionAttribute();
+
+            var attributesList = method.CustomAttributes.Where(x => x.AttributeType.FullName != testAttributeName && x.AttributeType.FullName != descriptionAttributeName).Select(x => x.AttributeType.Name.Replace("Attribute", "")).ToList();
+
+            var tempList = attributesList.Except(CustomAttributesList).ToList();
+
+            CustomAttributesList.AddRange(tempList);
+
+            return attributesList;
+        }
+
         public void LoadAssembly()
         {
             var assembly = Assembly.LoadFrom(_testFrameworkRunner.GetAssemblyPath());
 
             TestClassesList.Clear();
+
+            CustomAttributesList.Clear();
 
             foreach (var classes in assembly.GetTypes())
             {
@@ -119,16 +141,20 @@ namespace RCRunner
 
                 var className = classes.Name;
 
-                foreach (var testMethod in methodInfos.Select(methodInfo => new TestScript
+                foreach (var testMethod in methodInfos)
                 {
-                    ClassName = className,
-                    Name = methodInfo.Name,
-                    TestExecutionStatus = TestExecutionStatus.Active,
-                    LastExecutionErrorMsg = string.Empty,
-                    TestDescription = GetDescriptionAttributeValue(methodInfo)
-                }))
+                    var testScript = new TestScript
+                    {
+                        ClassName = className,
+                        Name = testMethod.Name,
+                        TestExecutionStatus = TestExecutionStatus.Active,
+                        LastExecutionErrorMsg = string.Empty,
+                        TestDescription = GetDescriptionAttributeValue(testMethod),
+                        CustomAtributteList = GetCustomAttributes(testMethod)
+                    };
 
-                    TestClassesList.Add(testMethod);
+                    TestClassesList.Add(testScript);
+                }
             }
         }
 

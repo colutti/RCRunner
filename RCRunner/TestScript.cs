@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 
 namespace RCRunner
@@ -58,6 +59,10 @@ namespace RCRunner
         /// Event fired when a test finishes executing
         /// </summary>
         public event TestRunFinishedDelegate TestRunFinished;
+        /// <summary>
+        /// Atributes found for a specific test case
+        /// </summary>
+        public List<string> CustomAtributteList;
 
         /// <summary>
         /// Method that will be called when a test finishes executing
@@ -85,6 +90,7 @@ namespace RCRunner
         public TestScript()
         {
             _pluginLoader = new PluginLoader();
+            CustomAtributteList = new List<string>();
         }
 
         /// <summary>

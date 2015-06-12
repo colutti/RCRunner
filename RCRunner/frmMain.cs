@@ -42,6 +42,15 @@ namespace RCRunner
             lblRunningScripts.ForeColor = _testRunning;
             lblWatingScripts.ForeColor = _testWaiting;
 
+            cmbxFilter.Items.Clear();
+            cmbxFilter.Items.Add("Everything");
+            cmbxFilter.Items.Add(TestExecutionStatus.Active);
+            cmbxFilter.Items.Add(TestExecutionStatus.Failed);
+            cmbxFilter.Items.Add(TestExecutionStatus.Passed);
+            cmbxFilter.Items.Add(TestExecutionStatus.Running);
+            cmbxFilter.Items.Add(TestExecutionStatus.Waiting);
+            cmbxFilter.SelectedIndex = 0;
+
             ResetTestExecution();
 
             DisableOrEnableControls(true);
@@ -70,6 +79,7 @@ namespace RCRunner
             lblFailedScripts.Text = @"Failed scripts: 0";
             lblRunningScripts.Text = @"Running scripts: 0";
             lblWatingScripts.Text = @"Waiting scripts: 0";
+            lblTotalScripts.Text = @"Total: 0";
         }
 
         private static void CheckTreeViewNode(TreeNode node, Boolean isChecked)
@@ -159,7 +169,7 @@ namespace RCRunner
 
         private void OnTestExecutionFinished()
         {
-            DisableOrEnableControls(true); 
+            DisableOrEnableControls(true);
         }
 
         private void OnTaskFinishedEvent(TestScript testcaseScript)
@@ -181,7 +191,7 @@ namespace RCRunner
                 }
             }
 
-           UpdateLblTestScripts(testcaseScript);
+            UpdateLblTestScripts(testcaseScript);
         }
 
         private static string CreateTestResultsFolder()
@@ -244,7 +254,7 @@ namespace RCRunner
             }
             finally
             {
-                trvTestCases.EndUpdate();  
+                trvTestCases.EndUpdate();
             }
         }
 
@@ -270,7 +280,21 @@ namespace RCRunner
 
                 _rcRunner.LoadAssembly();
 
+                cmbxAttributes.Items.Clear();
+
+                cmbxAttributes.Items.Add("All");
+
+                foreach (var attributes in _rcRunner.CustomAttributesList)
+                {
+                    cmbxAttributes.Items.Add(attributes);
+
+                }
+
+                cmbxAttributes.SelectedIndex = 0;
+
                 LoadTreeView(_rcRunner.TestClassesList);
+
+                lblTotalScripts.Text = @"Total: " + _rcRunner.TestClassesList.Count;
             }
             finally
             {
@@ -346,39 +370,34 @@ namespace RCRunner
                 lblCancel.Enabled = !enable;
                 lblLoadAssembly.Enabled = enable;
                 lblExecuteTestScripts.Enabled = enable;
+                cmbxAttributes.Enabled = enable;
+                cmbxFilter.Enabled = enable;
             }
         }
 
         private void cmbxFilter_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            IEnumerable<TestScript> testClassesList;
-            switch (cmbxFilter.SelectedIndex)
-            {
-                case 1:
-                    testClassesList = _rcRunner.TestClassesList.Where(x => x.TestExecutionStatus == TestExecutionStatus.Running);
-                    break;
+            ApplyFilter();
+        }
 
-                case 2:
-                    testClassesList = _rcRunner.TestClassesList.Where(x => x.TestExecutionStatus == TestExecutionStatus.Waiting);
-                    break;
+        private void ApplyFilter()
+        {
+            TestExecutionStatus testExecutionStatus;
 
-                case 3:
-                    testClassesList = _rcRunner.TestClassesList.Where(x => x.TestExecutionStatus == TestExecutionStatus.Failed);
-                    break;
+            if (!Enum.TryParse(cmbxFilter.Text, out testExecutionStatus)) testExecutionStatus = TestExecutionStatus.Active;
 
-                case 4:
-                    testClassesList = _rcRunner.TestClassesList.Where(x => x.TestExecutionStatus == TestExecutionStatus.Passed);
-                    break;
+            var testScriptsListAttributes = cmbxAttributes.Text == @"All" ? _rcRunner.TestClassesList : _rcRunner.TestClassesList.Where(x => x.CustomAtributteList.Contains(cmbxAttributes.Text)).ToList();
 
-                case 5:
-                    testClassesList = _rcRunner.TestClassesList.Where(x => x.TestExecutionStatus == TestExecutionStatus.Active);
-                    break;
+            var finalFilter = cmbxFilter.SelectedIndex == 0 ? testScriptsListAttributes : testScriptsListAttributes.Where(x => x.TestExecutionStatus == testExecutionStatus).ToList();
 
-                default:
-                    testClassesList = _rcRunner.TestClassesList;
-                    break;
-            }
-            LoadTreeView(testClassesList);
+            lblTotalScripts.Text = @"Total: " + finalFilter.Count();
+
+            LoadTreeView(finalFilter);
+        }
+
+        private void cmbxAttributes_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            ApplyFilter();
         }
     }
 
