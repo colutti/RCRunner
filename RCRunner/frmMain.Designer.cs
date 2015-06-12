@@ -352,13 +352,6 @@
             // 
             this.cmbxAttributes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbxAttributes.FormattingEnabled = true;
-            this.cmbxAttributes.Items.AddRange(new object[] {
-            "Everything",
-            "Running Scripts",
-            "Wating Scripts",
-            "Failed Scripts",
-            "Passed Scripts",
-            "Active Scripts"});
             this.cmbxAttributes.Location = new System.Drawing.Point(72, 63);
             this.cmbxAttributes.Name = "cmbxAttributes";
             this.cmbxAttributes.Size = new System.Drawing.Size(238, 21);
