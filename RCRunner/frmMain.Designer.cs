@@ -406,6 +406,7 @@
             this.trvTestCases.TabIndex = 2;
             this.trvTestCases.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.trvTestCases_AfterCheck);
             this.trvTestCases.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.trvTestCases_AfterSelect);
+            this.trvTestCases.KeyDown += new System.Windows.Forms.KeyEventHandler(this.trvTestCases_KeyDown);
             // 
             // FrmMain
             // 

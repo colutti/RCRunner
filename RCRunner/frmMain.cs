@@ -128,7 +128,7 @@ namespace RCRunner
 
         private TreeNode FindNodebyClassName(TestScript testcaseScript)
         {
-            return trvTestCases.Nodes.Cast<TreeNode>().FirstOrDefault(node => node.Text.Equals(testcaseScript.ClassName));
+            return trvTestCases.Nodes.Cast<TreeNode>().FirstOrDefault(node => node.Text.Contains(testcaseScript.ClassName));
         }
 
         private void OnMethodStatusChanged(TestScript testcasemethod)
@@ -254,6 +254,15 @@ namespace RCRunner
                     var methodNode = classNode.Nodes.Add(testMethod.Name);
                     methodNode.Tag = testMethod;
                     PaintTreeNodeBasedOnTestStatus(testMethod, methodNode);
+                    if (!classNode.Text.Contains("("))
+                    {
+                        classNode.Text = classNode.Text + @" (" + classNode.Nodes.Count + @")";    
+                    }
+                    else
+                    {
+                        var text = classNode.Text.Split('(');
+                        classNode.Text = text[0].Trim() + @" (" + classNode.Nodes.Count + @")"; 
+                    }
                 }
             }
             finally
@@ -402,6 +411,17 @@ namespace RCRunner
         private void cmbxAttributes_SelectionChangeCommitted(object sender, EventArgs e)
         {
             ApplyFilter();
+        }
+
+        private void trvTestCases_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData != (Keys.Control | Keys.C)) return;
+
+            if (trvTestCases.SelectedNode != null)
+            {
+                Clipboard.SetText(trvTestCases.SelectedNode.Text);
+            }
+            e.SuppressKeyPress = true;
         }
     }
 
