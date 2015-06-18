@@ -431,7 +431,10 @@ namespace RCRunner
         {
             if (!_testFrameworkRunner.CanExportResultsToExcel()) return;
             
-            var folderDialog = new FolderBrowserDialog();
+            var folderDialog = new FolderBrowserDialog
+            {
+                Description = @"Choose the folder that contains the test results"
+            };
             var result = folderDialog.ShowDialog();
             if (result != DialogResult.OK) return;
             var folder = folderDialog.SelectedPath;
