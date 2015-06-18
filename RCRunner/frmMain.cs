@@ -435,14 +435,24 @@ namespace RCRunner
             {
                 Description = @"Choose the folder that contains the test results"
             };
+
             var result = folderDialog.ShowDialog();
+
             if (result != DialogResult.OK) return;
+
             var folder = folderDialog.SelectedPath;
+
             var excelpath = Path.Combine(folder, "result.xlsx");
 
             _testFrameworkRunner.ExportResultsToExcel(folder, excelpath);
 
             MessageBox.Show(@"Results exported to " + excelpath);
+        }
+
+        private void cmbTestRunners_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            _testFrameworkRunner = _pluginLoader.TestRunnersPluginList[cmbTestRunners.SelectedIndex];
+            lblExportExcel.Visible = _testFrameworkRunner.CanExportResultsToExcel();
         }
     }
 

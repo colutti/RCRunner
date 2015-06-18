@@ -102,6 +102,7 @@
             this.cmbTestRunners.Name = "cmbTestRunners";
             this.cmbTestRunners.Size = new System.Drawing.Size(301, 21);
             this.cmbTestRunners.TabIndex = 7;
+            this.cmbTestRunners.SelectionChangeCommitted += new System.EventHandler(this.cmbTestRunners_SelectionChangeCommitted);
             // 
             // lblCancel
             // 
