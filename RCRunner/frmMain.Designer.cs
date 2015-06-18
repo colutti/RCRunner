@@ -57,6 +57,7 @@
             this.cmbxFilter = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.trvTestCases = new System.Windows.Forms.TreeView();
+            this.lblExportExcel = new System.Windows.Forms.LinkLabel();
             this.panel1.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -237,6 +238,7 @@
             // panel7
             // 
             this.panel7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(44)))));
+            this.panel7.Controls.Add(this.lblExportExcel);
             this.panel7.Controls.Add(this.txtbxTestError);
             this.panel7.Controls.Add(this.lblTestStatus);
             this.panel7.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -257,7 +259,7 @@
             this.txtbxTestError.Multiline = true;
             this.txtbxTestError.Name = "txtbxTestError";
             this.txtbxTestError.ReadOnly = true;
-            this.txtbxTestError.Size = new System.Drawing.Size(719, 371);
+            this.txtbxTestError.Size = new System.Drawing.Size(719, 352);
             this.txtbxTestError.TabIndex = 17;
             // 
             // lblTestStatus
@@ -408,6 +410,21 @@
             this.trvTestCases.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.trvTestCases_AfterSelect);
             this.trvTestCases.KeyDown += new System.Windows.Forms.KeyEventHandler(this.trvTestCases_KeyDown);
             // 
+            // lblExportExcel
+            // 
+            this.lblExportExcel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblExportExcel.AutoSize = true;
+            this.lblExportExcel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblExportExcel.ForeColor = System.Drawing.Color.White;
+            this.lblExportExcel.LinkColor = System.Drawing.Color.White;
+            this.lblExportExcel.Location = new System.Drawing.Point(579, 383);
+            this.lblExportExcel.Name = "lblExportExcel";
+            this.lblExportExcel.Size = new System.Drawing.Size(147, 17);
+            this.lblExportExcel.TabIndex = 18;
+            this.lblExportExcel.TabStop = true;
+            this.lblExportExcel.Text = "Export results to Excel";
+            this.lblExportExcel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblExportExcel_LinkClicked);
+            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -466,6 +483,7 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.ComboBox cmbxAttributes;
         private System.Windows.Forms.Label lblTotalScripts;
+        private System.Windows.Forms.LinkLabel lblExportExcel;
 
     }
 }

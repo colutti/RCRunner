@@ -74,6 +74,8 @@ namespace RCRunner
 
             cmbTestRunners.SelectedIndex = 0;
             _testFrameworkRunner = _pluginLoader.TestRunnersPluginList[0];
+
+            lblExportExcel.Visible = _testFrameworkRunner.CanExportResultsToExcel();
         }
 
         private void ResetTestExecution()
@@ -385,6 +387,7 @@ namespace RCRunner
                 lblExecuteTestScripts.Enabled = enable;
                 cmbxAttributes.Enabled = enable;
                 cmbxFilter.Enabled = enable;
+                lblExportExcel.Enabled = enable;
             }
         }
 
@@ -422,6 +425,21 @@ namespace RCRunner
                 Clipboard.SetText(trvTestCases.SelectedNode.Text);
             }
             e.SuppressKeyPress = true;
+        }
+
+        private void lblExportExcel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            if (!_testFrameworkRunner.CanExportResultsToExcel()) return;
+            
+            var folderDialog = new FolderBrowserDialog();
+            var result = folderDialog.ShowDialog();
+            if (result != DialogResult.OK) return;
+            var folder = folderDialog.SelectedPath;
+            var excelpath = Path.Combine(folder, "result.xlsx");
+
+            _testFrameworkRunner.ExportResultsToExcel(folder, excelpath);
+
+            MessageBox.Show(@"Results exported to " + excelpath);
         }
     }
 

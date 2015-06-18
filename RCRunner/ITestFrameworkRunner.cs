@@ -52,6 +52,19 @@
         /// </summary>
         /// <returns></returns>
         string GetDisplayName();
+
+        /// <summary>
+        /// Returns if the runner can export results to excel or not
+        /// </summary>
+        /// <returns></returns>
+        bool CanExportResultsToExcel();
+
+        /// <summary>
+        /// Exports the results files of a folder to excel
+        /// </summary>
+        /// <param name="resultsPath"></param>
+        /// <param name="excelFilepath"></param>
+        void ExportResultsToExcel(string resultsPath, string excelFilepath);
     }
 }
 
