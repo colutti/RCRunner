@@ -35,9 +35,7 @@ namespace RCRunner
             LoadTestRunners();
 
             _rcRunner = new RCRunnerAPI();
-            _rcRunner.OnTestFinished += OnTaskFinishedEvent;
             _rcRunner.MethodStatusChanged += OnMethodStatusChanged;
-            _rcRunner.OnTestExecutionFinished += OnTestExecutionFinished;
 
             trvTestCases.CheckBoxes = true;
 
@@ -135,7 +133,26 @@ namespace RCRunner
 
         private void OnMethodStatusChanged(TestScript testcasemethod)
         {
-            OnTaskFinishedEvent(testcasemethod);
+            UpdateTreeview(testcasemethod);
+
+            var status = testcasemethod.TestExecutionStatus;
+
+            if (status == TestExecutionStatus.Failed || status == TestExecutionStatus.Passed)
+            {
+                if (prgrsbrTestProgress.InvokeRequired)
+                {
+                    Action d = prgrsbrTestProgress.PerformStep;
+                    Invoke(d);
+                }
+                else
+                {
+                    prgrsbrTestProgress.PerformStep();
+                }
+            }
+
+            UpdateLblTestScripts(testcasemethod);
+
+            if (_rcRunner.Done()) DisableOrEnableControls(true);
         }
 
         private void UpdateLblTestScripts(TestScript testcaseScript)
@@ -171,33 +188,6 @@ namespace RCRunner
                     trvTestCases_AfterSelect(trvTestCases.SelectedNode, null);
                 }
             }
-        }
-
-        private void OnTestExecutionFinished()
-        {
-            DisableOrEnableControls(true);
-        }
-
-        private void OnTaskFinishedEvent(TestScript testcaseScript)
-        {
-            UpdateTreeview(testcaseScript);
-
-            var status = testcaseScript.TestExecutionStatus;
-
-            if (status == TestExecutionStatus.Failed || status == TestExecutionStatus.Passed)
-            {
-                if (prgrsbrTestProgress.InvokeRequired)
-                {
-                    Action d = prgrsbrTestProgress.PerformStep;
-                    Invoke(d);
-                }
-                else
-                {
-                    prgrsbrTestProgress.PerformStep();
-                }
-            }
-
-            UpdateLblTestScripts(testcaseScript);
         }
 
         private static string CreateTestResultsFolder()

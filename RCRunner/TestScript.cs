@@ -58,7 +58,7 @@ namespace RCRunner
         /// <summary>
         /// Event fired when a test finishes executing
         /// </summary>
-        public event TestRunFinishedDelegate TestRunFinished;
+        public TestRunFinishedDelegate TestRunFinished;
         /// <summary>
         /// Atributes found for a specific test case
         /// </summary>

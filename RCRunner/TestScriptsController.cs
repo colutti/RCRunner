@@ -6,17 +6,13 @@ namespace RCRunner
     public class TestScriptsController
     {
         /// <summary>
-        /// Event fired when a test finishes executing
-        /// </summary>
-        public event TestRunFinishedDelegate TestRunFinished;
-        /// <summary>
         /// Event fired when a test run changes its status
         /// </summary>
-        public event TestRunFinishedDelegate TestCaseStatusChanged;
+        public TestRunFinishedDelegate TestCaseStatusChanged;
         /// <summary>
         /// Event to check if the test run was canceled
         /// </summary>
-        public event CheckCanceled Canceled;
+        public CheckCanceled Canceled;
         /// <summary>
         /// List of the test cases to run
         /// </summary>
@@ -59,6 +55,7 @@ namespace RCRunner
         private void OnTaskTestRunFinishedEvent(TestScript testcaseScript)
         {
             _totRunningScripts--;
+            OnMethodStatusChanged(testcaseScript);
         }
 
         /// <summary>
@@ -89,8 +86,7 @@ namespace RCRunner
                 testMethod.SetTestRunner(_testFrameworkRunner);
                 testMethod.TestExecutionStatus = TestExecutionStatus.Running;
                 OnMethodStatusChanged(testMethod);
-                testMethod.TestRunFinished += OnTaskTestRunFinishedEvent;
-                testMethod.TestRunFinished += TestRunFinished;
+                testMethod.TestRunFinished = OnTaskTestRunFinishedEvent;
                 testMethod.DoWork();
             }
         }

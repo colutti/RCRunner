@@ -13,18 +13,9 @@ namespace RCRunner
 
         private readonly TestScriptsController _testCasesController;
 
-        public event TestRunFinishedDelegate OnTestFinished;
-
-        public event TestRunFinishedDelegate MethodStatusChanged;
-
-        public event Action OnTestExecutionFinished;
+        public TestRunFinishedDelegate MethodStatusChanged;
 
         public List<string> CustomAttributesList;
-
-        protected virtual void OnOnTestExecutionFinished()
-        {
-            if (OnTestExecutionFinished != null) OnTestExecutionFinished();
-        }
 
         public void OnMethodStatusChanged(TestScript testcaseScript)
         {
@@ -48,24 +39,14 @@ namespace RCRunner
             _canceled = true;
         }
 
-        protected virtual void OnOnTestFinished(TestScript testcasemethod)
-        {
-            RunningTestsCount.Update(testcasemethod);
-
-            if (OnTestFinished != null) OnTestFinished(testcasemethod);
-
-            if (RunningTestsCount.Done() || _canceled) OnOnTestExecutionFinished();
-        }
-
         public RCRunnerAPI()
         {
             RunningTestsCount = new RunningTestsCount();
             _testCasesController = new TestScriptsController();
             TestClassesList = new List<TestScript>();
             CustomAttributesList = new List<string>();
-            _testCasesController.TestRunFinished += OnTaskTestRunFinishedEvent;
-            _testCasesController.TestCaseStatusChanged += OnMethodStatusChanged;
-            _testCasesController.Canceled += CheckTasksCanceled;
+            _testCasesController.TestCaseStatusChanged = OnMethodStatusChanged;
+            _testCasesController.Canceled = CheckTasksCanceled;
             _canceled = false;
         }
 
@@ -172,9 +153,9 @@ namespace RCRunner
             _testCasesController.DoWork(testCasesList);
         }
 
-        private void OnTaskTestRunFinishedEvent(TestScript testcaseScript)
+        public bool Done()
         {
-            OnOnTestFinished(testcaseScript);
+            return RunningTestsCount.Done();
         }
 
     }
