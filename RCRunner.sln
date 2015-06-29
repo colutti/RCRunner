@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RCRunner", "RCRunner\RCRunn
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSTestWrapper", "MSTestWrapper\MSTestWrapper.csproj", "{7E1ACEF6-C2E0-481F-8E6E-02AF1EA744A6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RCRunner.Console", "RCRunner.Console\RCRunner.Console.csproj", "{5A847211-A262-4BCA-AE7B-026D98F5FE3F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,12 @@ Global
 		{7E1ACEF6-C2E0-481F-8E6E-02AF1EA744A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7E1ACEF6-C2E0-481F-8E6E-02AF1EA744A6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7E1ACEF6-C2E0-481F-8E6E-02AF1EA744A6}.Release|x86.ActiveCfg = Release|Any CPU
+		{5A847211-A262-4BCA-AE7B-026D98F5FE3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A847211-A262-4BCA-AE7B-026D98F5FE3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A847211-A262-4BCA-AE7B-026D98F5FE3F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5A847211-A262-4BCA-AE7B-026D98F5FE3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A847211-A262-4BCA-AE7B-026D98F5FE3F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A847211-A262-4BCA-AE7B-026D98F5FE3F}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,55 +1,58 @@
 using System.Collections.Generic;
 using System.Threading;
+using RCRunner.Properties;
 
 namespace RCRunner
 {
     public class TestScriptsController
     {
         /// <summary>
-        /// Event fired when a test run changes its status
-        /// </summary>
-        public TestRunFinishedDelegate TestCaseStatusChanged;
-        /// <summary>
-        /// Event to check if the test run was canceled
+        ///     Event to check if the test run was canceled
         /// </summary>
         public CheckCanceled Canceled;
+
         /// <summary>
-        /// List of the test cases to run
+        ///     Event fired when a test run changes its status
+        /// </summary>
+        public TestRunFinishedDelegate TestCaseStatusChanged;
+
+        /// <summary>
+        ///     List of the test cases to run
         /// </summary>
         private List<TestScript> _testCasesList;
 
         /// <summary>
-        /// Total of running test scripts
-        /// </summary>
-        private int _totRunningScripts;
-
-        /// <summary>
-        /// Main object that runs test cases
+        ///     Main object that runs test cases
         /// </summary>
         private ITestFrameworkRunner _testFrameworkRunner;
 
         /// <summary>
-        /// Check if the test run was canceled by the user
+        ///     Total of running test scripts
+        /// </summary>
+        private int _totRunningScripts;
+
+        /// <summary>
+        ///     Check if the test run was canceled by the user
         /// </summary>
         /// <returns></returns>
         protected virtual bool OnCanceled()
         {
-            var handler = Canceled;
+            CheckCanceled handler = Canceled;
             return handler != null && handler();
         }
 
         /// <summary>
-        /// Method to call the TestCaseStatusChanged event when a test changes its status (running, waiting, etc) 
+        ///     Method to call the TestCaseStatusChanged event when a test changes its status (running, waiting, etc)
         /// </summary>
         /// <param name="testcasemethod">The method whom status have changed</param>
         protected virtual void OnMethodStatusChanged(TestScript testcasemethod)
         {
-            var handler = TestCaseStatusChanged;
+            TestRunFinishedDelegate handler = TestCaseStatusChanged;
             if (handler != null) handler(testcasemethod);
         }
 
         /// <summary>
-        /// Method called by the TestCaseRunner when a test finishes
+        ///     Method called by the TestCaseRunner when a test finishes
         /// </summary>
         /// <param name="testcaseScript"></param>
         private void OnTaskTestRunFinishedEvent(TestScript testcaseScript)
@@ -59,7 +62,7 @@ namespace RCRunner
         }
 
         /// <summary>
-        /// Set for the _testFrameworkRunner property
+        ///     Set for the _testFrameworkRunner property
         /// </summary>
         /// <param name="testFrameworkRunner"></param>
         public void SetTestRunner(ITestFrameworkRunner testFrameworkRunner)
@@ -68,15 +71,15 @@ namespace RCRunner
         }
 
         /// <summary>
-        /// Method that will run all the tests listed in _testCasesList
+        ///     Method that will run all the tests listed in _testCasesList
         /// </summary>
         private void DoWorkCore()
         {
             _totRunningScripts = 0;
 
-            foreach (var testMethod in _testCasesList)
+            foreach (TestScript testMethod in _testCasesList)
             {
-                while (_totRunningScripts >= Properties.Settings.Default.MaxThreads)
+                while (_totRunningScripts >= Settings.Default.MaxThreads)
                 {
                     if (OnCanceled()) return;
                 }
@@ -92,7 +95,7 @@ namespace RCRunner
         }
 
         /// <summary>
-        /// Method that will call DoWorkCore to run all the tests in testCasesList in a thread
+        ///     Method that will call DoWorkCore to run all the tests in testCasesList in a thread
         /// </summary>
         /// <param name="testCasesList">The list of test cases to run</param>
         public void DoWork(List<TestScript> testCasesList)

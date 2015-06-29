@@ -68,8 +68,8 @@
     <Compile Include="frmMain.Designer.cs">
       <DependentUpon>frmMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="ITestExecution.cs" />
-    <Compile Include="ITestFrameworkRunner.cs" />
+    <Compile Include="PluginsStruct\ITestExecution.cs" />
+    <Compile Include="PluginsStruct\ITestFrameworkRunner.cs" />
     <Compile Include="PluginLoader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

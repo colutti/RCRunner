@@ -5,24 +5,35 @@ namespace RCRunner
     public class RunningTestsCount
     {
         /// <summary>
-        /// Count of running test scripts
-        /// </summary>
-        public int TotRunning;
-        /// <summary>
-        /// Count of failed test scripts
+        ///     Count of failed test scripts
         /// </summary>
         public int TotFailed;
+
         /// <summary>
-        /// Count of passed test scripts
+        ///     Count of passed test scripts
         /// </summary>
         public int TotPassed;
+
         /// <summary>
-        /// Count of wating test scripts
+        ///     Count of running test scripts
+        /// </summary>
+        public int TotRunning;
+
+        /// <summary>
+        ///     Count of wating test scripts
         /// </summary>
         public int TotWaiting;
 
         /// <summary>
-        /// Resets the count properties
+        ///     Constructor
+        /// </summary>
+        public RunningTestsCount()
+        {
+            Reset();
+        }
+
+        /// <summary>
+        ///     Resets the count properties
         /// </summary>
         public void Reset()
         {
@@ -33,15 +44,7 @@ namespace RCRunner
         }
 
         /// <summary>
-        /// Constructor
-        /// </summary>
-        public RunningTestsCount()
-        {
-            Reset();
-        }
-
-        /// <summary>
-        /// Update the count properties based on the status of a testmethod
+        ///     Update the count properties based on the status of a testmethod
         /// </summary>
         /// <param name="testcasemethod"></param>
         public void Update(TestScript testcasemethod)
@@ -75,13 +78,12 @@ namespace RCRunner
         }
 
         /// <summary>
-        /// Returns if all tests scritps have already ran
+        ///     Returns if all tests scritps have already ran
         /// </summary>
         /// <returns></returns>
         public bool Done()
         {
             return (TotRunning == 0) && (TotWaiting == 0);
         }
-
     }
 }
