@@ -1,5 +1,12 @@
+#What is new
+ - 06/29/2015 - New command line application. You can use it with tools like ```Jenkins``` or ```Team Foudation Build Service```
+ 
+	Usage: 
+			
+		RCRunner.Console.exe -a "C:\MyTests.dll" -r C:\MSTestWrapper.dll"
+		RCRunner.Console.exe -h for help 
+----------
 # RCRunner
-
 RCRunner is a tool designed to run automated test scripts in parallel using Selenium Grid. It is written in C# and it allows full customization. There are a few things necessary if you want to use it: 
 
   - You will need ```Visual Studio 2013``` and .```Net framework 4.5```.
@@ -19,4 +26,4 @@ RCRunner is under construction and it is currently in a beta stage. Things may n
 In case you need help, please [submit an issue](https://github.com/colutti/RCRunner/issues/new) and I'll be glad to help.
 
 ### Version
-Beta
+1.0
