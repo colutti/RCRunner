@@ -6,6 +6,7 @@
 		RCRunner.Console.exe -a "C:\MyTests.dll" -r C:\MSTestWrapper.dll"
 		RCRunner.Console.exe -h for help 
 ----------
+
 # RCRunner
 RCRunner is a tool designed to run automated test scripts in parallel using Selenium Grid. It is written in C# and it allows full customization. There are a few things necessary if you want to use it: 
 
