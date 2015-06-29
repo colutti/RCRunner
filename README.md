@@ -1,4 +1,4 @@
-#What is new
+#What's new
  - 06/29/2015 - New command line application. You can use it with tools like ```Jenkins``` or ```Team Foudation Build Service```
  
 	Usage: 
