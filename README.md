@@ -3,7 +3,7 @@
  
 	Usage: 
 			
-		RCRunner.Console.exe -a "C:\MyTests.dll" -r C:\MSTestWrapper.dll"
+		RCRunner.Console.exe -a "C:\MyTests.dll" -r "C:\MSTestWrapper.dll"
 		RCRunner.Console.exe -h for help 
 ----------
 
