@@ -1,4 +1,5 @@
 #What's new
+ - 07/03/2015 - Now you can filter the test scripts by more than one attribute
  - 06/29/2015 - New command line application. You can use it with tools like ```Jenkins``` or ```Team Foudation Build Service```
  
 	Usage: 
