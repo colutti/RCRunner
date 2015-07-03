@@ -44,20 +44,21 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel7 = new System.Windows.Forms.Panel();
+            this.lblExportExcel = new System.Windows.Forms.LinkLabel();
             this.txtbxTestError = new System.Windows.Forms.TextBox();
             this.lblTestStatus = new System.Windows.Forms.Label();
             this.panel6 = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
             this.txtbxTestDescription = new System.Windows.Forms.TextBox();
             this.panel5 = new System.Windows.Forms.Panel();
+            this.lblApplyFilter = new System.Windows.Forms.LinkLabel();
+            this.cmbxAttributes = new System.Windows.Forms.CheckedListBox();
             this.lblTotalScripts = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.cmbxAttributes = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.cmbxFilter = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.trvTestCases = new System.Windows.Forms.TreeView();
-            this.lblExportExcel = new System.Windows.Forms.LinkLabel();
             this.panel1.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -248,6 +249,21 @@
             this.panel7.Size = new System.Drawing.Size(736, 409);
             this.panel7.TabIndex = 17;
             // 
+            // lblExportExcel
+            // 
+            this.lblExportExcel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblExportExcel.AutoSize = true;
+            this.lblExportExcel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblExportExcel.ForeColor = System.Drawing.Color.White;
+            this.lblExportExcel.LinkColor = System.Drawing.Color.White;
+            this.lblExportExcel.Location = new System.Drawing.Point(579, 383);
+            this.lblExportExcel.Name = "lblExportExcel";
+            this.lblExportExcel.Size = new System.Drawing.Size(147, 17);
+            this.lblExportExcel.TabIndex = 18;
+            this.lblExportExcel.TabStop = true;
+            this.lblExportExcel.Text = "Export results to Excel";
+            this.lblExportExcel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblExportExcel_LinkClicked);
+            // 
             // txtbxTestError
             // 
             this.txtbxTestError.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -314,9 +330,10 @@
             // panel5
             // 
             this.panel5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(44)))));
+            this.panel5.Controls.Add(this.lblApplyFilter);
+            this.panel5.Controls.Add(this.cmbxAttributes);
             this.panel5.Controls.Add(this.lblTotalScripts);
             this.panel5.Controls.Add(this.label5);
-            this.panel5.Controls.Add(this.cmbxAttributes);
             this.panel5.Controls.Add(this.label1);
             this.panel5.Controls.Add(this.cmbxFilter);
             this.panel5.Controls.Add(this.label3);
@@ -326,6 +343,32 @@
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(319, 520);
             this.panel5.TabIndex = 10;
+            // 
+            // lblApplyFilter
+            // 
+            this.lblApplyFilter.AutoSize = true;
+            this.lblApplyFilter.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblApplyFilter.ForeColor = System.Drawing.Color.White;
+            this.lblApplyFilter.LinkColor = System.Drawing.Color.White;
+            this.lblApplyFilter.Location = new System.Drawing.Point(232, 164);
+            this.lblApplyFilter.Name = "lblApplyFilter";
+            this.lblApplyFilter.Size = new System.Drawing.Size(78, 17);
+            this.lblApplyFilter.TabIndex = 20;
+            this.lblApplyFilter.TabStop = true;
+            this.lblApplyFilter.Text = "Apply Filter";
+            this.lblApplyFilter.Click += new System.EventHandler(this.lblApplyFilter_Click);
+            // 
+            // cmbxAttributes
+            // 
+            this.cmbxAttributes.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(44)))));
+            this.cmbxAttributes.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.cmbxAttributes.CheckOnClick = true;
+            this.cmbxAttributes.ForeColor = System.Drawing.Color.White;
+            this.cmbxAttributes.FormattingEnabled = true;
+            this.cmbxAttributes.Location = new System.Drawing.Point(12, 80);
+            this.cmbxAttributes.Name = "cmbxAttributes";
+            this.cmbxAttributes.Size = new System.Drawing.Size(298, 77);
+            this.cmbxAttributes.TabIndex = 19;
             // 
             // lblTotalScripts
             // 
@@ -345,29 +388,19 @@
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.ForeColor = System.Drawing.Color.White;
-            this.label5.Location = new System.Drawing.Point(9, 60);
+            this.label5.Location = new System.Drawing.Point(9, 56);
             this.label5.Name = "label5";
             this.label5.Padding = new System.Windows.Forms.Padding(0, 5, 0, 0);
             this.label5.Size = new System.Drawing.Size(57, 20);
             this.label5.TabIndex = 11;
             this.label5.Text = "Attributes";
             // 
-            // cmbxAttributes
-            // 
-            this.cmbxAttributes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbxAttributes.FormattingEnabled = true;
-            this.cmbxAttributes.Location = new System.Drawing.Point(72, 63);
-            this.cmbxAttributes.Name = "cmbxAttributes";
-            this.cmbxAttributes.Size = new System.Drawing.Size(238, 21);
-            this.cmbxAttributes.TabIndex = 10;
-            this.cmbxAttributes.SelectionChangeCommitted += new System.EventHandler(this.cmbxAttributes_SelectionChangeCommitted);
-            // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(9, 27);
+            this.label1.Location = new System.Drawing.Point(9, 6);
             this.label1.Name = "label1";
             this.label1.Padding = new System.Windows.Forms.Padding(0, 5, 0, 0);
             this.label1.Size = new System.Drawing.Size(34, 20);
@@ -376,20 +409,22 @@
             // 
             // cmbxFilter
             // 
+            this.cmbxFilter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(44)))));
             this.cmbxFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbxFilter.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.cmbxFilter.ForeColor = System.Drawing.Color.White;
             this.cmbxFilter.FormattingEnabled = true;
-            this.cmbxFilter.Location = new System.Drawing.Point(72, 30);
+            this.cmbxFilter.Location = new System.Drawing.Point(12, 31);
             this.cmbxFilter.Name = "cmbxFilter";
-            this.cmbxFilter.Size = new System.Drawing.Size(238, 21);
+            this.cmbxFilter.Size = new System.Drawing.Size(298, 21);
             this.cmbxFilter.TabIndex = 8;
-            this.cmbxFilter.SelectionChangeCommitted += new System.EventHandler(this.cmbxFilter_SelectionChangeCommitted);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.Color.White;
-            this.label3.Location = new System.Drawing.Point(9, 1);
+            this.label3.Location = new System.Drawing.Point(9, 171);
             this.label3.Name = "label3";
             this.label3.Padding = new System.Windows.Forms.Padding(0, 5, 0, 0);
             this.label3.Size = new System.Drawing.Size(68, 20);
@@ -403,28 +438,13 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.trvTestCases.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(44)))));
             this.trvTestCases.ForeColor = System.Drawing.Color.White;
-            this.trvTestCases.Location = new System.Drawing.Point(12, 94);
+            this.trvTestCases.Location = new System.Drawing.Point(12, 197);
             this.trvTestCases.Name = "trvTestCases";
-            this.trvTestCases.Size = new System.Drawing.Size(298, 395);
+            this.trvTestCases.Size = new System.Drawing.Size(298, 293);
             this.trvTestCases.TabIndex = 2;
             this.trvTestCases.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.trvTestCases_AfterCheck);
             this.trvTestCases.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.trvTestCases_AfterSelect);
             this.trvTestCases.KeyDown += new System.Windows.Forms.KeyEventHandler(this.trvTestCases_KeyDown);
-            // 
-            // lblExportExcel
-            // 
-            this.lblExportExcel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblExportExcel.AutoSize = true;
-            this.lblExportExcel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblExportExcel.ForeColor = System.Drawing.Color.White;
-            this.lblExportExcel.LinkColor = System.Drawing.Color.White;
-            this.lblExportExcel.Location = new System.Drawing.Point(579, 383);
-            this.lblExportExcel.Name = "lblExportExcel";
-            this.lblExportExcel.Size = new System.Drawing.Size(147, 17);
-            this.lblExportExcel.TabIndex = 18;
-            this.lblExportExcel.TabStop = true;
-            this.lblExportExcel.Text = "Export results to Excel";
-            this.lblExportExcel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblExportExcel_LinkClicked);
             // 
             // FrmMain
             // 
@@ -482,9 +502,10 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ComboBox cmbTestRunners;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.ComboBox cmbxAttributes;
         private System.Windows.Forms.Label lblTotalScripts;
         private System.Windows.Forms.LinkLabel lblExportExcel;
+        private System.Windows.Forms.CheckedListBox cmbxAttributes;
+        private System.Windows.Forms.LinkLabel lblApplyFilter;
 
     }
 }

@@ -248,12 +248,12 @@ namespace RCRunner
                     PaintTreeNodeBasedOnTestStatus(testMethod, methodNode);
                     if (!classNode.Text.Contains("("))
                     {
-                        classNode.Text = classNode.Text + @" (" + classNode.Nodes.Count + @")";    
+                        classNode.Text = classNode.Text + @" (" + classNode.Nodes.Count + @")";
                     }
                     else
                     {
                         var text = classNode.Text.Split('(');
-                        classNode.Text = text[0].Trim() + @" (" + classNode.Nodes.Count + @")"; 
+                        classNode.Text = text[0].Trim() + @" (" + classNode.Nodes.Count + @")";
                     }
                 }
             }
@@ -287,15 +287,13 @@ namespace RCRunner
 
                 cmbxAttributes.Items.Clear();
 
-                cmbxAttributes.Items.Add("All");
-
                 foreach (var attributes in _rcRunner.CustomAttributesList)
                 {
                     cmbxAttributes.Items.Add(attributes);
 
                 }
 
-                cmbxAttributes.SelectedIndex = 0;
+                for (var i = 0; i < cmbxAttributes.Items.Count; i++) cmbxAttributes.SetItemChecked(i, true);
 
                 LoadTreeView(_rcRunner.TestClassesList);
 
@@ -381,29 +379,32 @@ namespace RCRunner
             }
         }
 
-        private void cmbxFilter_SelectionChangeCommitted(object sender, EventArgs e)
-        {
-            ApplyFilter();
-        }
-
         private void ApplyFilter()
         {
             TestExecutionStatus testExecutionStatus;
 
             if (!Enum.TryParse(cmbxFilter.Text, out testExecutionStatus)) testExecutionStatus = TestExecutionStatus.Active;
 
-            var testScriptsListAttributes = cmbxAttributes.Text == @"All" ? _rcRunner.TestClassesList : _rcRunner.TestClassesList.Where(x => x.CustomAtributteList.Contains(cmbxAttributes.Text)).ToList();
+            IEnumerable<TestScript> testScriptsListAttributes;
+
+            if (cmbxAttributes.CheckedItems.Count == 0 || cmbxAttributes.CheckedItems.Count == cmbxAttributes.Items.Count)
+            {
+                testScriptsListAttributes = _rcRunner.TestClassesList;
+            }
+            else
+            {
+                var selectedAttributes = cmbxAttributes.CheckedItems.Cast<string>().ToList();
+
+                testScriptsListAttributes = from t in _rcRunner.TestClassesList
+                                            where t.CustomAtributteList.Join(selectedAttributes, x => x, g => g, (a, b) => 1).Any()
+                                            select t;
+            }
 
             var finalFilter = cmbxFilter.SelectedIndex == 0 ? testScriptsListAttributes : testScriptsListAttributes.Where(x => x.TestExecutionStatus == testExecutionStatus).ToList();
 
             lblTotalScripts.Text = @"Total: " + finalFilter.Count();
 
             LoadTreeView(finalFilter);
-        }
-
-        private void cmbxAttributes_SelectionChangeCommitted(object sender, EventArgs e)
-        {
-            ApplyFilter();
         }
 
         private void trvTestCases_KeyDown(object sender, KeyEventArgs e)
@@ -420,7 +421,7 @@ namespace RCRunner
         private void lblExportExcel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             if (!_testFrameworkRunner.CanExportResultsToExcel()) return;
-            
+
             var folderDialog = new FolderBrowserDialog
             {
                 Description = @"Choose the folder that contains the test results"
@@ -443,6 +444,11 @@ namespace RCRunner
         {
             _testFrameworkRunner = _pluginLoader.TestRunnersPluginList[cmbTestRunners.SelectedIndex];
             lblExportExcel.Visible = _testFrameworkRunner.CanExportResultsToExcel();
+        }
+
+        private void lblApplyFilter_Click(object sender, EventArgs e)
+        {
+            ApplyFilter();
         }
     }
 
