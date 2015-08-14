@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using RCRunner.PluginsStruct;
 
 namespace RCRunner
 {
@@ -11,20 +12,20 @@ namespace RCRunner
         /// <summary>
         ///     List of test plugins
         /// </summary>
-        public List<ITestExecution> TestExecutionPlugiList;
+        public List<TestExecution> TestExecutionPlugiList;
 
         /// <summary>
         ///     List of all the test runners plugins
         /// </summary>
-        public List<ITestFrameworkRunner> TestRunnersPluginList;
+        public List<TestFrameworkRunner> TestRunnersPluginList;
 
         /// <summary>
         ///     Basic constructor
         /// </summary>
         public PluginLoader()
         {
-            TestRunnersPluginList = new List<ITestFrameworkRunner>();
-            TestExecutionPlugiList = new List<ITestExecution>();
+            TestRunnersPluginList = new List<TestFrameworkRunner>();
+            TestExecutionPlugiList = new List<TestExecution>();
         }
 
         /// <summary>
@@ -35,15 +36,15 @@ namespace RCRunner
         {
             try
             {
-                Assembly assembly = Assembly.LoadFrom(file);
+                var assembly = Assembly.LoadFrom(file);
 
-                IEnumerable<Type> classes = from type in assembly.GetTypes()
-                    where typeof (ITestFrameworkRunner).IsAssignableFrom(type) && type.IsPublic
+                var classes = from type in assembly.GetTypes()
+                    where typeof (TestFrameworkRunner).IsAssignableFrom(type) && type.IsPublic
                     select type;
 
                 foreach (
-                    ITestFrameworkRunner testRunnerObj in
-                        classes.Select(@class => (ITestFrameworkRunner) Activator.CreateInstance(@class)))
+                    var testRunnerObj in
+                        classes.Select(@class => (TestFrameworkRunner) Activator.CreateInstance(@class)))
                 {
                     TestRunnersPluginList.Add(testRunnerObj);
                 }
@@ -59,11 +60,11 @@ namespace RCRunner
         /// </summary>
         public void LoadTestRunnersPlugins()
         {
-            string resultFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins", "TestRunners");
+            var resultFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins", "TestRunners");
 
             if (!Directory.Exists(resultFilePath)) return;
 
-            string[] filePaths = Directory.GetFiles(resultFilePath, "*.dll");
+            var filePaths = Directory.GetFiles(resultFilePath, "*.dll");
 
             foreach (string file in filePaths)
             {
@@ -76,13 +77,13 @@ namespace RCRunner
         /// </summary>
         public void LoadTestExecutionPlugins()
         {
-            string resultFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins", "TestExecution");
+            var resultFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins", "TestExecution");
 
             if (!Directory.Exists(resultFilePath)) return;
 
-            string[] filePaths = Directory.GetFiles(resultFilePath, "*.dll");
+            var filePaths = Directory.GetFiles(resultFilePath, "*.dll");
 
-            foreach (string file in filePaths)
+            foreach (var file in filePaths)
             {
                 LoadTestExecutionAssembly(file);
             }
@@ -96,15 +97,14 @@ namespace RCRunner
         {
             try
             {
-                Assembly assembly = Assembly.LoadFrom(file);
+                var assembly = Assembly.LoadFrom(file);
 
-                IEnumerable<Type> classes = from type in assembly.GetTypes()
-                    where typeof (ITestExecution).IsAssignableFrom(type) && type.IsPublic
+                var classes = from type in assembly.GetTypes()
+                    where typeof (TestExecution).IsAssignableFrom(type) && type.IsPublic
                     select type;
 
                 foreach (
-                    ITestExecution testExecutionObj in
-                        classes.Select(@class => (ITestExecution) Activator.CreateInstance(@class)))
+                    var testExecutionObj in classes.Select(@class => (TestExecution) Activator.CreateInstance(@class)))
                 {
                     TestExecutionPlugiList.Add(testExecutionObj);
                 }
@@ -115,11 +115,27 @@ namespace RCRunner
             }
         }
 
-        public void RunTestExecutionPlugins(string testCase)
+        public void CallAfterTestExecutionPlugins(string testCase)
         {
-            foreach (ITestExecution testExecution in TestExecutionPlugiList)
+            foreach (var testExecution in TestExecutionPlugiList)
             {
                 testExecution.AfterTestExecution(testCase);
+            }
+        }
+
+        public void CallBeforeTestRunPlugins()
+        {
+            foreach (var testExecution in TestExecutionPlugiList)
+            {
+                testExecution.BeforeTestRun();
+            }
+        }
+
+        public void CallAfterTestRunPlugins()
+        {
+            foreach (var testExecution in TestExecutionPlugiList)
+            {
+                testExecution.AfterTestRun();
             }
         }
     }

@@ -130,6 +130,8 @@ namespace RCRunner.Console
 
         private static bool PrepareforRun(string runnerName, string assembly)
         {
+            PluginLoader.LoadTestExecutionPlugins();
+            
             PluginLoader.LoadTestRunnerAssembly(runnerName);
 
             var testFrameworkRunner = PluginLoader.TestRunnersPluginList.FirstOrDefault();
@@ -139,6 +141,8 @@ namespace RCRunner.Console
             testFrameworkRunner.SetAssemblyPath(assembly);
 
             RCRunnerAPI.SetTestRunner(testFrameworkRunner);
+
+            RCRunnerAPI.SetPluginLoader(PluginLoader);
 
             RCRunnerAPI.LoadAssembly();
 

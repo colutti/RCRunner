@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using RCRunner.PluginsStruct;
 
 namespace RCRunner
 {
@@ -15,14 +16,14 @@ namespace RCRunner
         private delegate void SetTextCallback(TestScript testcaseScript);
         private delegate void SetEnabledCallback(bool enabled);
 
-        private PluginLoader _pluginLoader;
+        private readonly PluginLoader _pluginLoader;
 
         private readonly Color _testActive = Color.FloralWhite;
         private readonly Color _testFailed = Color.Red;
         private readonly Color _testPassed = Color.GreenYellow;
         private readonly Color _testRunning = Color.Blue;
         private readonly Color _testWaiting = Color.DarkOrange;
-        private ITestFrameworkRunner _testFrameworkRunner;
+        private TestFrameworkRunner _testFrameworkRunner;
 
         public FrmMain()
         {
@@ -32,7 +33,9 @@ namespace RCRunner
             // ReSharper disable once DoNotCallOverridableMethodsInConstructor
             Text = String.Format("RC Test Script Runner version {0}", version);
 
+            _pluginLoader = new PluginLoader();
             LoadTestRunners();
+            _pluginLoader.LoadTestExecutionPlugins();
 
             _rcRunner = new RCRunnerAPI();
             _rcRunner.MethodStatusChanged += OnMethodStatusChanged;
@@ -60,7 +63,6 @@ namespace RCRunner
 
         private void LoadTestRunners()
         {
-            _pluginLoader = new PluginLoader();
             _pluginLoader.LoadTestRunnersPlugins();
 
             foreach (var testFrameworkRunner in _pluginLoader.TestRunnersPluginList)
@@ -283,6 +285,8 @@ namespace RCRunner
 
                 _rcRunner.SetTestRunner(_testFrameworkRunner);
 
+                _rcRunner.SetPluginLoader(_pluginLoader);
+
                 _rcRunner.LoadAssembly();
 
                 cmbxAttributes.Items.Clear();
@@ -331,6 +335,8 @@ namespace RCRunner
             ResetTestExecution();
 
             _rcRunner.SetTestRunner(_testFrameworkRunner);
+
+            _rcRunner.SetPluginLoader(_pluginLoader);
 
             DisableOrEnableControls(false);
 

@@ -8,14 +8,14 @@ using System.Xml.Serialization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
-using RCRunner;
+using RCRunner.PluginsStruct;
 
 namespace MSTestWrapper
 {
     /// <summary>
     /// A test wrapper that implements the ITestFrameworkRunner as an adapter for the MSTest test framework
     /// </summary>
-    public class MSTestWrapper : ITestFrameworkRunner
+    public class MSTestWrapper : TestFrameworkRunner
     {
         private string _assemblyPath;
         private string _resultFilePath;
@@ -24,7 +24,7 @@ namespace MSTestWrapper
         /// Returns the assembly that contains the test cases to run
         /// </summary>
         /// <returns>Returns the assembly path</returns>
-        public string GetAssemblyPath()
+        public override string GetAssemblyPath()
         {
             return _assemblyPath;
         }
@@ -33,7 +33,7 @@ namespace MSTestWrapper
         /// Sets the assembly that contains the test cases to run
         /// </summary>
         /// <param name="assemblyPath">The assembly that contains the test cases to run</param>
-        public void SetAssemblyPath(string assemblyPath)
+        public override void SetAssemblyPath(string assemblyPath)
         {
             _assemblyPath = assemblyPath;
         }
@@ -42,7 +42,7 @@ namespace MSTestWrapper
         /// Retuns the folder which the tests results will be stored
         /// </summary>
         /// <returns>The folder which the tests results will be stored</returns>
-        public string GetTestResultsFolder()
+        public override string GetTestResultsFolder()
         {
             return _resultFilePath;
         }
@@ -51,7 +51,7 @@ namespace MSTestWrapper
         /// Sets the folder which the tests results will be stored
         /// </summary>
         /// <param name="folder">The folder which the tests results will be stored</param>
-        public void SetTestResultsFolder(string folder)
+        public override void SetTestResultsFolder(string folder)
         {
             _resultFilePath = folder;
         }
@@ -60,7 +60,7 @@ namespace MSTestWrapper
         /// Returns the name of the attribute that defines a test method
         /// </summary>
         /// <returns>The name of the attribute that defines a test method</returns>
-        public string GetTestMethodAttribute()
+        public override string GetTestMethodAttribute()
         {
             return typeof(TestMethodAttribute).FullName;
         }
@@ -165,7 +165,7 @@ namespace MSTestWrapper
         /// Executes a test case specified by the testcase param
         /// </summary>
         /// <param name="testCase">The test case to run</param>
-        public void RunTest(string testCase)
+        public override void RunTest(string testCase)
         {
             var errorMsg = string.Empty;
 
@@ -236,7 +236,7 @@ namespace MSTestWrapper
         /// Returns the name of the attribute that defines a description for a test method
         /// </summary>
         /// <returns>The name of the attribute that defines description for a test method</returns>
-        public string GetTestMethodDescriptionAttribute()
+        public override string GetTestMethodDescriptionAttribute()
         {
             return typeof(DescriptionAttribute).FullName;
         }
@@ -245,7 +245,7 @@ namespace MSTestWrapper
         /// Returns the name of the test runner
         /// </summary>
         /// <returns></returns>
-        public string GetDisplayName()
+        public override string GetDisplayName()
         {
             return "MSTest";
         }
@@ -254,7 +254,7 @@ namespace MSTestWrapper
         /// Returns if the runner can export results to excel or not
         /// </summary>
         /// <returns></returns>
-        public bool CanExportResultsToExcel()
+        public override bool CanExportResultsToExcel()
         {
             return true;
         }
@@ -264,7 +264,7 @@ namespace MSTestWrapper
         /// </summary>
         /// <param name="resultsPath"></param>
         /// <param name="excelFilepath"></param>
-        public void ExportResultsToExcel(string resultsPath, string excelFilepath)
+        public override void ExportResultsToExcel(string resultsPath, string excelFilepath)
         {
             int aborted = 0, passed = 0, failed = 0, notexecuted = 0;
 

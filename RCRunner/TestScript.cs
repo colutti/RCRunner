@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using RCRunner.PluginsStruct;
 
 namespace RCRunner
 {
@@ -48,10 +49,6 @@ namespace RCRunner
         /// </summary>
         public string TestDescription;
         /// <summary>
-        /// Main object that runs test cases
-        /// </summary>
-        private ITestFrameworkRunner _testFrameworkRunner;
-        /// <summary>
         /// Class to load plugins to execute events after a test run
         /// </summary>
         private readonly PluginLoader _pluginLoader;
@@ -97,9 +94,8 @@ namespace RCRunner
         /// Set for the _testFrameworkRunner property
         /// </summary>
         /// <param name="testFrameworkRunner"></param>
-        public void SetTestRunner(ITestFrameworkRunner testFrameworkRunner)
+        public void SetTestRunner(TestFrameworkRunner testFrameworkRunner)
         {
-            _testFrameworkRunner = testFrameworkRunner;
         }
 
         /// <summary>
@@ -120,13 +116,13 @@ namespace RCRunner
             {
                 try
                 {
-                    //Thread.Sleep(5000);
-                    _testFrameworkRunner.RunTest(Name);
+                    Thread.Sleep(5000);
+                    //_testFrameworkRunner.RunTest(Name);
                     OnTestRunFinished(null);
                 }
                 finally
                 {
-                    _pluginLoader.RunTestExecutionPlugins(Name);
+                    _pluginLoader.CallAfterTestExecutionPlugins(Name);
                 }
             }
             catch (Exception exception)

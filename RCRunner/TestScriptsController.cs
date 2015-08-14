@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading;
+using RCRunner.PluginsStruct;
 using RCRunner.Properties;
 
 namespace RCRunner
@@ -24,7 +25,7 @@ namespace RCRunner
         /// <summary>
         ///     Main object that runs test cases
         /// </summary>
-        private ITestFrameworkRunner _testFrameworkRunner;
+        private TestFrameworkRunner _testFrameworkRunner;
 
         /// <summary>
         ///     Total of running test scripts
@@ -65,7 +66,7 @@ namespace RCRunner
         ///     Set for the _testFrameworkRunner property
         /// </summary>
         /// <param name="testFrameworkRunner"></param>
-        public void SetTestRunner(ITestFrameworkRunner testFrameworkRunner)
+        public void SetTestRunner(TestFrameworkRunner testFrameworkRunner)
         {
             _testFrameworkRunner = testFrameworkRunner;
         }

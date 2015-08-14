@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using RCRunner.PluginsStruct;
 
 namespace RCRunner
 {
@@ -17,13 +18,20 @@ namespace RCRunner
 
         public List<string> CustomAttributesList;
 
+        private PluginLoader _pluginLoader;
+
         public void OnMethodStatusChanged(TestScript testcaseScript)
         {
             RunningTestsCount.Update(testcaseScript);
             if (MethodStatusChanged != null) MethodStatusChanged(testcaseScript);
+
+            if (Done())
+            {
+                _pluginLoader.CallAfterTestRunPlugins();
+            }
         }
 
-        private ITestFrameworkRunner _testFrameworkRunner;
+        private TestFrameworkRunner _testFrameworkRunner;
 
         private bool _canceled;
 
@@ -50,10 +58,15 @@ namespace RCRunner
             _canceled = false;
         }
 
-        public void SetTestRunner(ITestFrameworkRunner testFrameworkRunner)
+        public void SetTestRunner(TestFrameworkRunner testFrameworkRunner)
         {
             _testFrameworkRunner = testFrameworkRunner;
             _testCasesController.SetTestRunner(testFrameworkRunner);
+        }
+
+        public void SetPluginLoader(PluginLoader pluginLoader)
+        {
+            _pluginLoader = pluginLoader;
         }
 
         private string GetDescriptionAttributeValue(MemberInfo methodInfo)
@@ -143,6 +156,8 @@ namespace RCRunner
         {
             RunningTestsCount.Reset();
             _canceled = false;
+
+            _pluginLoader.CallBeforeTestRunPlugins();
 
             foreach (var testMethod in testCasesList)
             {
