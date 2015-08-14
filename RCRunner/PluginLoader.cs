@@ -14,6 +14,8 @@ namespace RCRunner
         /// </summary>
         public List<TestExecution> TestExecutionPlugiList;
 
+        private readonly object _lockObj;
+
         /// <summary>
         ///     List of all the test runners plugins
         /// </summary>
@@ -24,6 +26,7 @@ namespace RCRunner
         /// </summary>
         public PluginLoader()
         {
+            _lockObj = new object();
             TestRunnersPluginList = new List<TestFrameworkRunner>();
             TestExecutionPlugiList = new List<TestExecution>();
         }
@@ -34,24 +37,27 @@ namespace RCRunner
         /// <param name="file"></param>
         public void LoadTestRunnerAssembly(string file)
         {
-            try
+            lock (_lockObj)
             {
-                var assembly = Assembly.LoadFrom(file);
-
-                var classes = from type in assembly.GetTypes()
-                    where typeof (TestFrameworkRunner).IsAssignableFrom(type) && type.IsPublic
-                    select type;
-
-                foreach (
-                    var testRunnerObj in
-                        classes.Select(@class => (TestFrameworkRunner) Activator.CreateInstance(@class)))
+                try
                 {
-                    TestRunnersPluginList.Add(testRunnerObj);
+                    var assembly = Assembly.LoadFrom(file);
+
+                    var classes = from type in assembly.GetTypes()
+                        where type.IsSubclassOf(typeof (TestFrameworkRunner)) && type.IsPublic
+                        select type;
+
+                    foreach (
+                        var testRunnerObj in
+                            classes.Select(@class => (TestFrameworkRunner) Activator.CreateInstance(@class)))
+                    {
+                        TestRunnersPluginList.Add(testRunnerObj);
+                    }
                 }
-            }
-                // ReSharper disable once EmptyGeneralCatchClause
-            catch (Exception)
-            {
+                    // ReSharper disable once EmptyGeneralCatchClause
+                catch (Exception)
+                {
+                }
             }
         }
 
@@ -60,15 +66,18 @@ namespace RCRunner
         /// </summary>
         public void LoadTestRunnersPlugins()
         {
-            var resultFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins", "TestRunners");
-
-            if (!Directory.Exists(resultFilePath)) return;
-
-            var filePaths = Directory.GetFiles(resultFilePath, "*.dll");
-
-            foreach (string file in filePaths)
+            lock (_lockObj)
             {
-                LoadTestRunnerAssembly(file);
+                var resultFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins", "TestRunners");
+
+                if (!Directory.Exists(resultFilePath)) return;
+
+                var filePaths = Directory.GetFiles(resultFilePath, "*.dll");
+
+                foreach (string file in filePaths)
+                {
+                    LoadTestRunnerAssembly(file);
+                }
             }
         }
 
@@ -77,15 +86,18 @@ namespace RCRunner
         /// </summary>
         public void LoadTestExecutionPlugins()
         {
-            var resultFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins", "TestExecution");
-
-            if (!Directory.Exists(resultFilePath)) return;
-
-            var filePaths = Directory.GetFiles(resultFilePath, "*.dll");
-
-            foreach (var file in filePaths)
+            lock (_lockObj)
             {
-                LoadTestExecutionAssembly(file);
+                var resultFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins", "TestExecution");
+
+                if (!Directory.Exists(resultFilePath)) return;
+
+                var filePaths = Directory.GetFiles(resultFilePath, "*.dll");
+
+                foreach (var file in filePaths)
+                {
+                    LoadTestExecutionAssembly(file);
+                }
             }
         }
 
@@ -100,7 +112,7 @@ namespace RCRunner
                 var assembly = Assembly.LoadFrom(file);
 
                 var classes = from type in assembly.GetTypes()
-                    where typeof (TestExecution).IsAssignableFrom(type) && type.IsPublic
+                    where type.IsSubclassOf(typeof (TestExecution)) && type.IsPublic
                     select type;
 
                 foreach (
@@ -117,25 +129,34 @@ namespace RCRunner
 
         public void CallAfterTestExecutionPlugins(string testCase)
         {
-            foreach (var testExecution in TestExecutionPlugiList)
+            lock (_lockObj)
             {
-                testExecution.AfterTestExecution(testCase);
+                foreach (var testExecution in TestExecutionPlugiList)
+                {
+                    testExecution.AfterTestExecution(testCase);
+                }
             }
         }
 
         public void CallBeforeTestRunPlugins()
         {
-            foreach (var testExecution in TestExecutionPlugiList)
+            lock (_lockObj)
             {
-                testExecution.BeforeTestRun();
+                foreach (var testExecution in TestExecutionPlugiList)
+                {
+                    testExecution.BeforeTestRun();
+                }
             }
         }
 
         public void CallAfterTestRunPlugins()
         {
-            foreach (var testExecution in TestExecutionPlugiList)
+            lock (_lockObj)
             {
-                testExecution.AfterTestRun();
+                foreach (var testExecution in TestExecutionPlugiList)
+                {
+                    testExecution.AfterTestRun();
+                }
             }
         }
     }

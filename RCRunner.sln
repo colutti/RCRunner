@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RCRunner", "RCRunner\RCRunner.csproj", "{711C58B0-09A5-4D67-9413-D5BF58EC4A9D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSTestWrapper", "MSTestWrapper\MSTestWrapper.csproj", "{7E1ACEF6-C2E0-481F-8E6E-02AF1EA744A6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RCRunner.Console", "RCRunner.Console\RCRunner.Console.csproj", "{5A847211-A262-4BCA-AE7B-026D98F5FE3F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleTestExecutionPlugin", "SampleTestExecutionPlugin\SampleTestExecutionPlugin.csproj", "{E31EE408-6968-4A4C-AB42-280854CC7EA1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +37,12 @@ Global
 		{5A847211-A262-4BCA-AE7B-026D98F5FE3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5A847211-A262-4BCA-AE7B-026D98F5FE3F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5A847211-A262-4BCA-AE7B-026D98F5FE3F}.Release|x86.ActiveCfg = Release|Any CPU
+		{E31EE408-6968-4A4C-AB42-280854CC7EA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E31EE408-6968-4A4C-AB42-280854CC7EA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E31EE408-6968-4A4C-AB42-280854CC7EA1}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E31EE408-6968-4A4C-AB42-280854CC7EA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E31EE408-6968-4A4C-AB42-280854CC7EA1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E31EE408-6968-4A4C-AB42-280854CC7EA1}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

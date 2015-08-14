@@ -137,7 +137,7 @@ namespace RCRunner
 
                 foreach (var testMethod in methodInfos)
                 {
-                    var testScript = new TestScript
+                    var testScript = new TestScript(_pluginLoader)
                     {
                         ClassName = className,
                         Name = testMethod.Name,
