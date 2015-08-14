@@ -62,6 +62,11 @@ namespace RCRunner
         public List<string> CustomAtributteList;
 
         /// <summary>
+        /// Main object that runs test cases
+        /// </summary>
+        private TestFrameworkRunner _testFrameworkRunner;
+
+        /// <summary>
         /// Method that will be called when a test finishes executing
         /// </summary>
         /// <param name="exception">The object that represents a test cases run error</param>
@@ -84,9 +89,9 @@ namespace RCRunner
         /// <summary>
         /// Constructor
         /// </summary>
-        public TestScript()
+        public TestScript(PluginLoader pluginLoader)
         {
-            _pluginLoader = new PluginLoader();
+            _pluginLoader = pluginLoader;
             CustomAtributteList = new List<string>();
         }
 
@@ -96,6 +101,7 @@ namespace RCRunner
         /// <param name="testFrameworkRunner"></param>
         public void SetTestRunner(TestFrameworkRunner testFrameworkRunner)
         {
+            _testFrameworkRunner = testFrameworkRunner;
         }
 
         /// <summary>
@@ -116,8 +122,8 @@ namespace RCRunner
             {
                 try
                 {
-                    Thread.Sleep(5000);
-                    //_testFrameworkRunner.RunTest(Name);
+                    //Thread.Sleep(5000);
+                    _testFrameworkRunner.RunTest(Name);
                     OnTestRunFinished(null);
                 }
                 finally
