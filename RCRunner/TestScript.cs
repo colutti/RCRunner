@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.Hosting;
 using System.Threading;
 using RCRunner.PluginsStruct;
 
@@ -123,7 +122,7 @@ namespace RCRunner
             {
                 try
                 {
-                    //Thread.Sleep(5000); to debug
+                    //Thread.Sleep(5000); //to debug
                     _testFrameworkRunner.RunTest(Name);
                     OnTestRunFinished(null);
                 }
