@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
-using RCRunner.PluginsStruct;
+using RCRunner.Shared.Lib.PluginsStruct;
 
 namespace MSTestWrapper
 {
@@ -92,6 +92,7 @@ namespace MSTestWrapper
         /// <returns></returns>
         private bool InternalRunTest(string testCase, ref string errorMsg)
         {
+            Debug.Assert(_resultFilePath != null, "_resultFilePath != null");
             var resultFilePath = Path.Combine(_resultFilePath, testCase);
             Directory.CreateDirectory(resultFilePath);
 
@@ -294,6 +295,14 @@ namespace MSTestWrapper
 
             foreach (var file in filesList)
             {
+                // ReSharper disable once AssignNullToNotNullAttribute
+                var secondTryFile = Path.Combine(Path.GetDirectoryName(file), Path.GetFileNameWithoutExtension(file) + "(2)" + ".trx");
+
+                if (File.Exists(secondTryFile))
+                {
+                    continue;
+                }
+
                 // Deserialize TestRunType object from the trx file
                 var fileStreamReader = new StreamReader(file);
 

@@ -1,4 +1,4 @@
-﻿namespace RCRunner.PluginsStruct
+﻿namespace RCRunner.Shared.Lib.PluginsStruct
 {
     /// <summary>
     ///     Defines an interface for plugins that needs to be called when a test execution happens

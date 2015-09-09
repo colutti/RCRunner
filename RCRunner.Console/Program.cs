@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using CommandLine;
 using CommandLine.Text;
+using RCRunner.Shared.Lib;
 
 namespace RCRunner.Console
 {
@@ -89,6 +92,14 @@ namespace RCRunner.Console
             return (int)ExitCode.Success;
         }
 
+        private static string CreateTestResultsFolder()
+        {
+            var folderName = DateTime.Now.ToString(CultureInfo.InvariantCulture).Replace("/", "").Replace(":", "");
+            var resultFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TestResults", folderName);
+            Directory.CreateDirectory(resultFilePath);
+            return resultFilePath;
+        }
+
         private static void OnMethodStatusChanged(TestScript testcasemethod)
         {
             if (testcasemethod.TestExecutionStatus == TestExecutionStatus.Failed) _totFailed++;
@@ -139,6 +150,9 @@ namespace RCRunner.Console
             if (testFrameworkRunner == null) return false;
 
             testFrameworkRunner.SetAssemblyPath(assembly);
+
+            var testResultsFolder = CreateTestResultsFolder();
+            testFrameworkRunner.SetTestResultsFolder(testResultsFolder);
 
             RCRunnerAPI.SetTestRunner(testFrameworkRunner);
 

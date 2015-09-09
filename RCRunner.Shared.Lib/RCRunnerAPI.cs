@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using RCRunner.PluginsStruct;
+using RCRunner.Shared.Lib.PluginsStruct;
 
-namespace RCRunner
+namespace RCRunner.Shared.Lib
 {
     public delegate bool CheckCanceled();
 

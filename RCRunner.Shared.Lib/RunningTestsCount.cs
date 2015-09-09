@@ -1,6 +1,6 @@
 using System.Threading;
 
-namespace RCRunner
+namespace RCRunner.Shared.Lib
 {
     public class RunningTestsCount
     {

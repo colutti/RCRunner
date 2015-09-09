@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Threading;
-using RCRunner.PluginsStruct;
-using RCRunner.Properties;
+using RCRunner.Shared.Lib.PluginsStruct;
+using RCRunner.Shared.Lib.Properties;
 
-namespace RCRunner
+namespace RCRunner.Shared.Lib
 {
     public class TestScriptsController
     {

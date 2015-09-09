@@ -1,4 +1,4 @@
-﻿namespace RCRunner.PluginsStruct
+﻿namespace RCRunner.Shared.Lib.PluginsStruct
 {
     /// <summary>
     ///     Defines an Interface to comunicate with different test frameworks, such as mstest, nunit, etc

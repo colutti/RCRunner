@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using RCRunner.PluginsStruct;
+using RCRunner.Shared.Lib.PluginsStruct;
 
-namespace RCRunner
+namespace RCRunner.Shared.Lib
 {
     /// <summary>
     /// Delegate that defines an event that will be called after a test runs

@@ -1,5 +1,4 @@
-﻿using System.Windows.Forms;
-using RCRunner.PluginsStruct;
+﻿using RCRunner.Shared.Lib.PluginsStruct;
 
 namespace SampleTestExecutionPlugin
 {

@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RCRunner.Console", "RCRunne
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleTestExecutionPlugin", "SampleTestExecutionPlugin\SampleTestExecutionPlugin.csproj", "{E31EE408-6968-4A4C-AB42-280854CC7EA1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RCRunner.Shared.Lib", "RCRunner.Shared.Lib\RCRunner.Shared.Lib.csproj", "{53FA569A-05A5-47F4-A6ED-F15FBFA7E342}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +45,12 @@ Global
 		{E31EE408-6968-4A4C-AB42-280854CC7EA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E31EE408-6968-4A4C-AB42-280854CC7EA1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E31EE408-6968-4A4C-AB42-280854CC7EA1}.Release|x86.ActiveCfg = Release|Any CPU
+		{53FA569A-05A5-47F4-A6ED-F15FBFA7E342}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53FA569A-05A5-47F4-A6ED-F15FBFA7E342}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53FA569A-05A5-47F4-A6ED-F15FBFA7E342}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{53FA569A-05A5-47F4-A6ED-F15FBFA7E342}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53FA569A-05A5-47F4-A6ED-F15FBFA7E342}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53FA569A-05A5-47F4-A6ED-F15FBFA7E342}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

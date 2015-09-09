@@ -44,9 +44,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RCRunner\RCRunner.csproj">
-      <Project>{711c58b0-09a5-4d67-9413-d5bf58ec4a9d}</Project>
-      <Name>RCRunner</Name>
+    <ProjectReference Include="..\RCRunner.Shared.Lib\RCRunner.Shared.Lib.csproj">
+      <Project>{53fa569a-05a5-47f4-a6ed-f15fbfa7e342}</Project>
+      <Name>RCRunner.Shared.Lib</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
