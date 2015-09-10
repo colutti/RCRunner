@@ -152,7 +152,7 @@ namespace RCRunner.Shared.Lib
             }
         }
 
-        public void RunTestCases(List<TestScript> testCasesList)
+        public void RunTestCases(List<TestScript> testCasesList, int threads)
         {
             RunningTestsCount.Reset();
             _canceled = false;
@@ -165,7 +165,7 @@ namespace RCRunner.Shared.Lib
                 testMethod.LastExecutionErrorMsg = string.Empty;
                 OnMethodStatusChanged(testMethod);
             }
-            _testCasesController.DoWork(testCasesList);
+            _testCasesController.DoWork(testCasesList, threads);
         }
 
         public bool Done()

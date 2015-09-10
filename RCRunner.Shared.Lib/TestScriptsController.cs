@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Threading;
 using RCRunner.Shared.Lib.PluginsStruct;
-using RCRunner.Shared.Lib.Properties;
 
 namespace RCRunner.Shared.Lib
 {
@@ -31,6 +30,11 @@ namespace RCRunner.Shared.Lib
         ///     Total of running test scripts
         /// </summary>
         private int _totRunningScripts;
+
+        /// <summary>
+        /// Number of threads to run tests at the same time
+        /// </summary>
+        private int _threads;
 
         /// <summary>
         ///     Check if the test run was canceled by the user
@@ -80,7 +84,7 @@ namespace RCRunner.Shared.Lib
 
             foreach (TestScript testMethod in _testCasesList)
             {
-                while (_totRunningScripts >= Settings.Default.MaxThreads)
+                while (_totRunningScripts >= _threads)
                 {
                     if (OnCanceled()) return;
                 }
@@ -99,8 +103,10 @@ namespace RCRunner.Shared.Lib
         ///     Method that will call DoWorkCore to run all the tests in testCasesList in a thread
         /// </summary>
         /// <param name="testCasesList">The list of test cases to run</param>
-        public void DoWork(List<TestScript> testCasesList)
+        /// <param name="threads">Max threads to run tests</param>
+        public void DoWork(List<TestScript> testCasesList, int threads)
         {
+            _threads = threads;
             _testCasesList = testCasesList;
             var t = new Thread(DoWorkCore);
             t.Start();

@@ -29,6 +29,9 @@ namespace RCRunner.Console
         [Option('f', "feedback", Required = false, DefaultValue = false, HelpText = "Print test execution feedback")]
         public bool Feedback { get; set; }
 
+        [Option('p', "parallel", Required = false, DefaultValue = 10, HelpText = "How many tests to run in parallel")]
+        public int Threads { get; set; }
+
         [ParserState]
         public IParserState LastParserState { get; set; }
 
@@ -85,7 +88,7 @@ namespace RCRunner.Console
 
             _totScripts = testList.Count();
 
-            RCRunnerAPI.RunTestCases(testList);
+            RCRunnerAPI.RunTestCases(testList, Options.Threads);
 
             if (_totFailed > 0) return (int)ExitCode.Failed;
 

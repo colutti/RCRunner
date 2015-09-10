@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using RCRunner.Properties;
 using RCRunner.Shared.Lib;
 using RCRunner.Shared.Lib.PluginsStruct;
 
@@ -354,7 +355,7 @@ namespace RCRunner
             {
                 var testResultsFolder = CreateTestResultsFolder();
                 _testFrameworkRunner.SetTestResultsFolder(testResultsFolder);
-                _rcRunner.RunTestCases(testCasesList);
+                _rcRunner.RunTestCases(testCasesList, Settings.Default.MaxThreads);
             }
             else
             {
