@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Threading;
 using RCRunner.Shared.Lib.PluginsStruct;
 
@@ -22,6 +23,8 @@ namespace RCRunner.Shared.Lib
         Waiting,
         Running,
     }
+
+
 
     /// <summary>
     /// Class that runs an automated test case in a thread

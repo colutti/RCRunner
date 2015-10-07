@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 using RCRunner.Properties;
 using RCRunner.Shared.Lib;
@@ -23,7 +24,7 @@ namespace RCRunner
         private readonly Color _testActive = Color.FloralWhite;
         private readonly Color _testFailed = Color.Red;
         private readonly Color _testPassed = Color.GreenYellow;
-        private readonly Color _testRunning = Color.Blue;
+        private readonly Color _testRunning = Color.CornflowerBlue;
         private readonly Color _testWaiting = Color.DarkOrange;
         private TestFrameworkRunner _testFrameworkRunner;
 
@@ -41,8 +42,6 @@ namespace RCRunner
 
             _rcRunner = new RCRunnerAPI();
             _rcRunner.MethodStatusChanged += OnMethodStatusChanged;
-
-            trvTestCases.CheckBoxes = true;
 
             lblFailedScripts.ForeColor = _testFailed;
             lblPassedScripts.ForeColor = _testPassed;
@@ -90,49 +89,28 @@ namespace RCRunner
             lblTotalScripts.Text = @"Total: 0";
         }
 
-        private static void CheckTreeViewNode(TreeNode node, Boolean isChecked)
-        {
-            foreach (TreeNode item in node.Nodes)
-            {
-                item.Checked = isChecked;
-
-                if (item.Nodes.Count > 0)
-                {
-                    CheckTreeViewNode(item, isChecked);
-                }
-            }
-        }
-
-        private void PaintTreeNodeBasedOnTestStatus(TestScript testcaseScript, TreeNode node)
+        private void PaintTreeNodeBasedOnTestStatus(TestScript testcaseScript, ListViewItem item)
         {
             switch (testcaseScript.TestExecutionStatus)
             {
                 case TestExecutionStatus.Active:
-                    node.ForeColor = _testActive;
+                    item.ForeColor = _testActive;
                     break;
                 case TestExecutionStatus.Failed:
-                    node.ForeColor = _testFailed;
+                    item.ForeColor = _testFailed;
                     break;
                 case TestExecutionStatus.Passed:
-                    node.ForeColor = _testPassed;
+                    item.ForeColor = _testPassed;
                     break;
                 case TestExecutionStatus.Running:
-                    node.ForeColor = _testRunning;
+                    item.ForeColor = _testRunning;
                     break;
                 case TestExecutionStatus.Waiting:
-                    node.ForeColor = _testWaiting;
+                    item.ForeColor = _testWaiting;
                     break;
             }
-        }
-
-        private TreeNode FindNodebyTest(TestScript testcaseScript)
-        {
-            return trvTestCases.Nodes.Cast<TreeNode>().SelectMany(node => node.Nodes.Cast<TreeNode>().Where(child => child.Tag == testcaseScript)).FirstOrDefault();
-        }
-
-        private TreeNode FindNodebyClassName(TestScript testcaseScript)
-        {
-            return trvTestCases.Nodes.Cast<TreeNode>().FirstOrDefault(node => node.Text.Contains(testcaseScript.ClassName));
+            item.SubItems[2].Text = testcaseScript.TestExecutionStatus.ToString();
+            item.SubItems[4].Text = testcaseScript.LastExecutionErrorMsg;
         }
 
         private void OnMethodStatusChanged(TestScript testcasemethod)
@@ -177,20 +155,16 @@ namespace RCRunner
 
         private void UpdateTreeview(TestScript testcaseScript)
         {
-            if (trvTestCases.InvokeRequired)
+            if (listViewTestScripts.InvokeRequired)
             {
                 var d = new SetTextCallback(UpdateTreeview);
                 Invoke(d, new object[] { testcaseScript });
             }
             else
             {
-                var nodeFound = FindNodebyTest(testcaseScript);
-                if (nodeFound == null) return;
-                PaintTreeNodeBasedOnTestStatus(testcaseScript, nodeFound);
-                if (trvTestCases.SelectedNode != null)
-                {
-                    trvTestCases_AfterSelect(trvTestCases.SelectedNode, null);
-                }
+                var item = listViewTestScripts.FindItemWithText(testcaseScript.Name, true, 0);
+                if (item == null) return;
+                PaintTreeNodeBasedOnTestStatus(testcaseScript, item);
             }
         }
 
@@ -202,73 +176,48 @@ namespace RCRunner
             return resultFilePath;
         }
 
-        private void trvTestCases_AfterCheck(object sender, TreeViewEventArgs e)
+        private void LoadTestScriptListToView(IEnumerable<TestScript> testClassesList)
         {
-            CheckTreeViewNode(e.Node, e.Node.Checked);
-        }
-
-        private void trvTestCases_AfterSelect(object sender, TreeViewEventArgs e)
-        {
-            var node = trvTestCases.SelectedNode;
-            if (node == null) return;
-            if (!(node.Tag is TestScript)) return;
-
-            var testMethod = node.Tag as TestScript;
-            txtbxTestDescription.Text = testMethod.TestDescription;
-            lblTestStatus.Text = @"Test Status: " + testMethod.TestExecutionStatus;
-            switch (testMethod.TestExecutionStatus)
-            {
-                case TestExecutionStatus.Active:
-                    lblTestStatus.ForeColor = _testActive;
-                    break;
-                case TestExecutionStatus.Failed:
-                    lblTestStatus.ForeColor = _testFailed;
-                    break;
-                case TestExecutionStatus.Passed:
-                    lblTestStatus.ForeColor = _testPassed;
-                    break;
-                case TestExecutionStatus.Running:
-                    lblTestStatus.ForeColor = _testRunning;
-                    break;
-                case TestExecutionStatus.Waiting:
-                    lblTestStatus.ForeColor = _testWaiting;
-                    break;
-            }
-
-            txtbxTestError.Text = testMethod.LastExecutionErrorMsg;
-        }
-
-        private void LoadTreeView(IEnumerable<TestScript> testClassesList)
-        {
-            trvTestCases.BeginUpdate();
-            trvTestCases.Nodes.Clear();
+            listViewTestScripts.ListViewItemSorter = null;
+            listViewTestScripts.BeginUpdate();
+            listViewTestScripts.Items.Clear();
             try
             {
                 foreach (var testMethod in testClassesList)
                 {
-                    var classNode = FindNodebyClassName(testMethod) ?? trvTestCases.Nodes.Add(testMethod.ClassName);
-                    var methodNode = classNode.Nodes.Add(testMethod.Name);
-                    methodNode.Tag = testMethod;
-                    PaintTreeNodeBasedOnTestStatus(testMethod, methodNode);
-                    if (!classNode.Text.Contains("("))
-                    {
-                        classNode.Text = classNode.Text + @" (" + classNode.Nodes.Count + @")";
-                    }
-                    else
-                    {
-                        var text = classNode.Text.Split('(');
-                        classNode.Text = text[0].Trim() + @" (" + classNode.Nodes.Count + @")";
-                    }
+                    var item = listViewTestScripts.Items.Add(testMethod.ClassName);
+                    item.SubItems.Add(testMethod.Name);
+                    item.SubItems.Add(testMethod.TestExecutionStatus.ToString());
+                    item.SubItems.Add(testMethod.TestDescription);
+                    item.SubItems.Add(testMethod.LastExecutionErrorMsg);
+                    item.Tag = testMethod;
+                    PaintTreeNodeBasedOnTestStatus(testMethod, item );
                 }
             }
             finally
             {
-                trvTestCases.EndUpdate();
+                listViewTestScripts.ListViewItemSorter = new ListViewItemComparer(0); 
+                listViewTestScripts.EndUpdate();
             }
+        }
+
+        private void LoadClassList(IEnumerable<TestScript> testClassesList)
+        {
+            foreach (var testScript in testClassesList.Where(testScript => !cmbxClasses.Items.Contains(testScript.ClassName)))
+            {
+               cmbxClasses.Items.Add(testScript.ClassName, true);
+            }
+            cmbxClasses.Sorted = true;
         }
 
         private void lblLoadAssembly_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
+            if (_pluginLoader.TestRunnersPluginList.Count <= 0)
+            {
+                MessageBox.Show(string.Format(@"No test framework plugins found. Make sure you have a test framework plugin at {0} before opening the runner", 
+                    Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Plugins\TestRunners")), @"Missing plugin", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
             ResetTestExecution();
             DisableOrEnableControls(false);
             try
@@ -301,7 +250,9 @@ namespace RCRunner
 
                 for (var i = 0; i < cmbxAttributes.Items.Count; i++) cmbxAttributes.SetItemChecked(i, true);
 
-                LoadTreeView(_rcRunner.TestClassesList);
+                LoadTestScriptListToView(_rcRunner.TestClassesList);
+
+                LoadClassList(_rcRunner.TestClassesList);
 
                 lblTotalScripts.Text = @"Total: " + _rcRunner.TestClassesList.Count;
             }
@@ -309,27 +260,6 @@ namespace RCRunner
             {
                 DisableOrEnableControls(true);
             }
-        }
-
-        private static int TreeviewCountCheckedNodes(IEnumerable treeNodeCollection)
-        {
-            var countchecked = 0;
-
-            if (treeNodeCollection == null) return countchecked;
-
-            foreach (TreeNode node in treeNodeCollection)
-            {
-                if (node.Nodes.Count == 0 && node.Checked)
-                {
-                    countchecked++;
-                }
-                else if (node.Nodes.Count > 0)
-                {
-                    countchecked += TreeviewCountCheckedNodes(node.Nodes);
-                }
-            }
-
-            return countchecked;
         }
 
         private void lblExecuteTestScripts_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -342,14 +272,11 @@ namespace RCRunner
 
             DisableOrEnableControls(false);
 
-            prgrsbrTestProgress.Maximum = TreeviewCountCheckedNodes(trvTestCases.Nodes);
+            prgrsbrTestProgress.Maximum = listViewTestScripts.CheckedItems.Count;
 
             var testCasesList = new List<TestScript>();
 
-            foreach (TreeNode node in trvTestCases.Nodes)
-            {
-                testCasesList.AddRange(from TreeNode child in node.Nodes where child.Checked where child.Tag is TestScript select child.Tag as TestScript);
-            }
+            testCasesList.AddRange(from ListViewItem item in listViewTestScripts.CheckedItems select item.Tag as TestScript);
 
             if (testCasesList.Any())
             {
@@ -408,22 +335,39 @@ namespace RCRunner
                                             select t;
             }
 
-            var finalFilter = cmbxFilter.SelectedIndex == 0 ? testScriptsListAttributes : testScriptsListAttributes.Where(x => x.TestExecutionStatus == testExecutionStatus).ToList();
+            var classFilter = testScriptsListAttributes;
 
-            lblTotalScripts.Text = @"Total: " + finalFilter.Count();
+            if (cmbxClasses.CheckedItems.Count > 0 && cmbxClasses.CheckedItems.Count != cmbxClasses.Items.Count)
+            {
+                var selectedClasses = cmbxClasses.CheckedItems.Cast<string>().ToList();
 
-            LoadTreeView(finalFilter);
+                classFilter = classFilter.Where(x => selectedClasses.Contains(x.ClassName));
+            }
+
+            var finalFilter = cmbxFilter.SelectedIndex == 0 ? classFilter : classFilter.Where(x => x.TestExecutionStatus == testExecutionStatus).ToList();
+
+            var testClassesList = finalFilter as IList<TestScript> ?? finalFilter.ToList();
+
+            lblTotalScripts.Text = @"Total: " + testClassesList.Count();
+
+            LoadTestScriptListToView(testClassesList);
         }
 
-        private void trvTestCases_KeyDown(object sender, KeyEventArgs e)
+        private void resultsListView_KeyUp(object sender, KeyEventArgs e)
         {
-            if (e.KeyData != (Keys.Control | Keys.C)) return;
+            if (sender != listViewTestScripts) return;
 
-            if (trvTestCases.SelectedNode != null)
-            {
-                Clipboard.SetText(trvTestCases.SelectedNode.Text);
-            }
-            e.SuppressKeyPress = true;
+            if (e.Control && e.KeyCode == Keys.C)
+                CopySelectedValuesToClipboard();
+        }
+
+        private void CopySelectedValuesToClipboard()
+        {
+            var builder = new StringBuilder();
+            foreach (ListViewItem item in listViewTestScripts.SelectedItems)
+                builder.AppendLine(item.SubItems[1].Text);
+
+            Clipboard.SetText(builder.ToString());
         }
 
         private void lblExportExcel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -458,6 +402,43 @@ namespace RCRunner
         {
             ApplyFilter();
         }
+
+        private void lblCheckAll_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            foreach (ListViewItem item in listViewTestScripts.Items)
+            {
+                item.Checked = true;
+            }
+        }
+
+        private void lblUncheckAll_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            foreach (ListViewItem item in listViewTestScripts.Items)
+            {
+                item.Checked = false;
+            }
+        }
+
+        private void listViewTestScripts_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            listViewTestScripts.ListViewItemSorter = new ListViewItemComparer(e.Column);
+        }
+
     }
+
+    class ListViewItemComparer : IComparer
+    {
+        private readonly int _col;
+
+        public ListViewItemComparer(int column)
+        {
+            _col = column;
+        }
+        public int Compare(object x, object y)
+        {
+            return String.CompareOrdinal(((ListViewItem)x).SubItems[_col].Text, ((ListViewItem)y).SubItems[_col].Text);
+        }
+    }
+
 
 }

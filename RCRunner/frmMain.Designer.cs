@@ -42,30 +42,34 @@
             this.lblRunningScripts = new System.Windows.Forms.Label();
             this.prgrsbrTestProgress = new System.Windows.Forms.ProgressBar();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.panel7 = new System.Windows.Forms.Panel();
-            this.lblExportExcel = new System.Windows.Forms.LinkLabel();
-            this.txtbxTestError = new System.Windows.Forms.TextBox();
-            this.lblTestStatus = new System.Windows.Forms.Label();
-            this.panel6 = new System.Windows.Forms.Panel();
-            this.label2 = new System.Windows.Forms.Label();
-            this.txtbxTestDescription = new System.Windows.Forms.TextBox();
             this.panel5 = new System.Windows.Forms.Panel();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.label5 = new System.Windows.Forms.Label();
+            this.cmbxClasses = new System.Windows.Forms.CheckedListBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.cmbxFilter = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.lblApplyFilter = new System.Windows.Forms.LinkLabel();
             this.cmbxAttributes = new System.Windows.Forms.CheckedListBox();
-            this.lblTotalScripts = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.cmbxFilter = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.trvTestCases = new System.Windows.Forms.TreeView();
+            this.lblTotalScripts = new System.Windows.Forms.Label();
+            this.lblExportExcel = new System.Windows.Forms.LinkLabel();
+            this.listViewTestScripts = new System.Windows.Forms.ListView();
+            this.clmClassname = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.clmTestScript = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.clmTestStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.clmDescription = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.clmLastError = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.lblUncheckAll = new System.Windows.Forms.LinkLabel();
+            this.lblCheckAll = new System.Windows.Forms.LinkLabel();
             this.panel1.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel2.SuspendLayout();
-            this.panel3.SuspendLayout();
-            this.panel7.SuspendLayout();
-            this.panel6.SuspendLayout();
             this.panel5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -80,7 +84,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1055, 47);
+            this.panel1.Size = new System.Drawing.Size(1116, 47);
             this.panel1.TabIndex = 2;
             // 
             // label4
@@ -88,7 +92,7 @@
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.ForeColor = System.Drawing.Color.White;
-            this.label4.Location = new System.Drawing.Point(13, 11);
+            this.label4.Location = new System.Drawing.Point(72, 11);
             this.label4.Name = "label4";
             this.label4.Padding = new System.Windows.Forms.Padding(0, 5, 0, 0);
             this.label4.Size = new System.Drawing.Size(91, 20);
@@ -99,7 +103,7 @@
             // 
             this.cmbTestRunners.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbTestRunners.FormattingEnabled = true;
-            this.cmbTestRunners.Location = new System.Drawing.Point(110, 14);
+            this.cmbTestRunners.Location = new System.Drawing.Point(178, 14);
             this.cmbTestRunners.Name = "cmbTestRunners";
             this.cmbTestRunners.Size = new System.Drawing.Size(301, 21);
             this.cmbTestRunners.TabIndex = 7;
@@ -111,7 +115,7 @@
             this.lblCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblCancel.ForeColor = System.Drawing.Color.White;
             this.lblCancel.LinkColor = System.Drawing.Color.White;
-            this.lblCancel.Location = new System.Drawing.Point(708, 14);
+            this.lblCancel.Location = new System.Drawing.Point(765, 14);
             this.lblCancel.Name = "lblCancel";
             this.lblCancel.Size = new System.Drawing.Size(116, 17);
             this.lblCancel.TabIndex = 5;
@@ -125,7 +129,7 @@
             this.lblExecuteTestScripts.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblExecuteTestScripts.ForeColor = System.Drawing.Color.White;
             this.lblExecuteTestScripts.LinkColor = System.Drawing.Color.White;
-            this.lblExecuteTestScripts.Location = new System.Drawing.Point(552, 14);
+            this.lblExecuteTestScripts.Location = new System.Drawing.Point(613, 14);
             this.lblExecuteTestScripts.Name = "lblExecuteTestScripts";
             this.lblExecuteTestScripts.Size = new System.Drawing.Size(137, 17);
             this.lblExecuteTestScripts.TabIndex = 4;
@@ -139,7 +143,7 @@
             this.lblLoadAssembly.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLoadAssembly.ForeColor = System.Drawing.Color.White;
             this.lblLoadAssembly.LinkColor = System.Drawing.Color.White;
-            this.lblLoadAssembly.Location = new System.Drawing.Point(426, 14);
+            this.lblLoadAssembly.Location = new System.Drawing.Point(494, 14);
             this.lblLoadAssembly.Name = "lblLoadAssembly";
             this.lblLoadAssembly.Size = new System.Drawing.Size(104, 17);
             this.lblLoadAssembly.TabIndex = 3;
@@ -159,7 +163,7 @@
             this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel4.Location = new System.Drawing.Point(0, 47);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(1055, 72);
+            this.panel4.Size = new System.Drawing.Size(1116, 72);
             this.panel4.TabIndex = 10;
             // 
             // lblPassedScripts
@@ -211,43 +215,177 @@
             this.prgrsbrTestProgress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.prgrsbrTestProgress.ForeColor = System.Drawing.Color.Coral;
-            this.prgrsbrTestProgress.Location = new System.Drawing.Point(73, 9);
+            this.prgrsbrTestProgress.Location = new System.Drawing.Point(72, 9);
             this.prgrsbrTestProgress.Name = "prgrsbrTestProgress";
-            this.prgrsbrTestProgress.Size = new System.Drawing.Size(911, 23);
+            this.prgrsbrTestProgress.Size = new System.Drawing.Size(972, 23);
             this.prgrsbrTestProgress.Step = 1;
             this.prgrsbrTestProgress.TabIndex = 0;
             // 
             // panel2
             // 
-            this.panel2.Controls.Add(this.panel3);
             this.panel2.Controls.Add(this.panel5);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(0, 119);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1055, 520);
+            this.panel2.Size = new System.Drawing.Size(1116, 633);
             this.panel2.TabIndex = 11;
             // 
-            // panel3
+            // panel5
             // 
-            this.panel3.Controls.Add(this.panel7);
-            this.panel3.Controls.Add(this.panel6);
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel3.Location = new System.Drawing.Point(319, 0);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(736, 520);
-            this.panel3.TabIndex = 11;
+            this.panel5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(44)))));
+            this.panel5.Controls.Add(this.splitContainer1);
+            this.panel5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel5.Location = new System.Drawing.Point(0, 0);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(1116, 633);
+            this.panel5.TabIndex = 10;
             // 
-            // panel7
+            // splitContainer1
             // 
-            this.panel7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(44)))));
-            this.panel7.Controls.Add(this.lblExportExcel);
-            this.panel7.Controls.Add(this.txtbxTestError);
-            this.panel7.Controls.Add(this.lblTestStatus);
-            this.panel7.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel7.Location = new System.Drawing.Point(0, 111);
-            this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(736, 409);
-            this.panel7.TabIndex = 17;
+            this.splitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.label5);
+            this.splitContainer1.Panel1.Controls.Add(this.cmbxClasses);
+            this.splitContainer1.Panel1.Controls.Add(this.label2);
+            this.splitContainer1.Panel1.Controls.Add(this.cmbxFilter);
+            this.splitContainer1.Panel1.Controls.Add(this.label1);
+            this.splitContainer1.Panel1.Controls.Add(this.lblApplyFilter);
+            this.splitContainer1.Panel1.Controls.Add(this.cmbxAttributes);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.label3);
+            this.splitContainer1.Panel2.Controls.Add(this.lblTotalScripts);
+            this.splitContainer1.Panel2.Controls.Add(this.lblExportExcel);
+            this.splitContainer1.Panel2.Controls.Add(this.listViewTestScripts);
+            this.splitContainer1.Panel2.Controls.Add(this.lblUncheckAll);
+            this.splitContainer1.Panel2.Controls.Add(this.lblCheckAll);
+            this.splitContainer1.Size = new System.Drawing.Size(1116, 633);
+            this.splitContainer1.SplitterDistance = 211;
+            this.splitContainer1.TabIndex = 31;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.ForeColor = System.Drawing.Color.White;
+            this.label5.Location = new System.Drawing.Point(14, 319);
+            this.label5.Name = "label5";
+            this.label5.Padding = new System.Windows.Forms.Padding(0, 5, 0, 0);
+            this.label5.Size = new System.Drawing.Size(66, 20);
+            this.label5.TabIndex = 36;
+            this.label5.Text = "Class (OR)";
+            // 
+            // cmbxClasses
+            // 
+            this.cmbxClasses.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmbxClasses.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(44)))));
+            this.cmbxClasses.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.cmbxClasses.CheckOnClick = true;
+            this.cmbxClasses.ForeColor = System.Drawing.Color.White;
+            this.cmbxClasses.FormattingEnabled = true;
+            this.cmbxClasses.Location = new System.Drawing.Point(17, 343);
+            this.cmbxClasses.Name = "cmbxClasses";
+            this.cmbxClasses.Size = new System.Drawing.Size(171, 227);
+            this.cmbxClasses.TabIndex = 35;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.ForeColor = System.Drawing.Color.White;
+            this.label2.Location = new System.Drawing.Point(14, 64);
+            this.label2.Name = "label2";
+            this.label2.Padding = new System.Windows.Forms.Padding(0, 5, 0, 0);
+            this.label2.Size = new System.Drawing.Size(57, 20);
+            this.label2.TabIndex = 34;
+            this.label2.Text = "Atributtes";
+            // 
+            // cmbxFilter
+            // 
+            this.cmbxFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmbxFilter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(44)))));
+            this.cmbxFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbxFilter.ForeColor = System.Drawing.Color.White;
+            this.cmbxFilter.FormattingEnabled = true;
+            this.cmbxFilter.Location = new System.Drawing.Point(17, 36);
+            this.cmbxFilter.Name = "cmbxFilter";
+            this.cmbxFilter.Size = new System.Drawing.Size(171, 21);
+            this.cmbxFilter.TabIndex = 33;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.Color.White;
+            this.label1.Location = new System.Drawing.Point(14, 12);
+            this.label1.Name = "label1";
+            this.label1.Padding = new System.Windows.Forms.Padding(0, 5, 0, 0);
+            this.label1.Size = new System.Drawing.Size(41, 20);
+            this.label1.TabIndex = 32;
+            this.label1.Text = "Status";
+            // 
+            // lblApplyFilter
+            // 
+            this.lblApplyFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblApplyFilter.AutoSize = true;
+            this.lblApplyFilter.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblApplyFilter.ForeColor = System.Drawing.Color.White;
+            this.lblApplyFilter.LinkColor = System.Drawing.Color.White;
+            this.lblApplyFilter.Location = new System.Drawing.Point(110, 605);
+            this.lblApplyFilter.Name = "lblApplyFilter";
+            this.lblApplyFilter.Size = new System.Drawing.Size(78, 17);
+            this.lblApplyFilter.TabIndex = 31;
+            this.lblApplyFilter.TabStop = true;
+            this.lblApplyFilter.Text = "Apply Filter";
+            this.lblApplyFilter.Click += new System.EventHandler(this.lblApplyFilter_Click);
+            // 
+            // cmbxAttributes
+            // 
+            this.cmbxAttributes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmbxAttributes.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(44)))));
+            this.cmbxAttributes.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.cmbxAttributes.CheckOnClick = true;
+            this.cmbxAttributes.ForeColor = System.Drawing.Color.White;
+            this.cmbxAttributes.FormattingEnabled = true;
+            this.cmbxAttributes.Location = new System.Drawing.Point(17, 87);
+            this.cmbxAttributes.Name = "cmbxAttributes";
+            this.cmbxAttributes.Size = new System.Drawing.Size(171, 227);
+            this.cmbxAttributes.TabIndex = 30;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.ForeColor = System.Drawing.Color.White;
+            this.label3.Location = new System.Drawing.Point(12, 12);
+            this.label3.Name = "label3";
+            this.label3.Padding = new System.Windows.Forms.Padding(0, 5, 0, 0);
+            this.label3.Size = new System.Drawing.Size(68, 20);
+            this.label3.TabIndex = 38;
+            this.label3.Text = "Test scripts";
+            // 
+            // lblTotalScripts
+            // 
+            this.lblTotalScripts.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lblTotalScripts.AutoSize = true;
+            this.lblTotalScripts.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTotalScripts.ForeColor = System.Drawing.Color.White;
+            this.lblTotalScripts.Location = new System.Drawing.Point(12, 578);
+            this.lblTotalScripts.Name = "lblTotalScripts";
+            this.lblTotalScripts.Padding = new System.Windows.Forms.Padding(0, 5, 0, 0);
+            this.lblTotalScripts.Size = new System.Drawing.Size(47, 20);
+            this.lblTotalScripts.TabIndex = 37;
+            this.lblTotalScripts.Text = "Total: 0";
             // 
             // lblExportExcel
             // 
@@ -256,201 +394,99 @@
             this.lblExportExcel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblExportExcel.ForeColor = System.Drawing.Color.White;
             this.lblExportExcel.LinkColor = System.Drawing.Color.White;
-            this.lblExportExcel.Location = new System.Drawing.Point(579, 383);
+            this.lblExportExcel.Location = new System.Drawing.Point(786, 605);
             this.lblExportExcel.Name = "lblExportExcel";
-            this.lblExportExcel.Size = new System.Drawing.Size(147, 17);
-            this.lblExportExcel.TabIndex = 18;
+            this.lblExportExcel.Size = new System.Drawing.Size(101, 17);
+            this.lblExportExcel.TabIndex = 36;
             this.lblExportExcel.TabStop = true;
-            this.lblExportExcel.Text = "Export results to Excel";
+            this.lblExportExcel.Text = "Export to Excel";
             this.lblExportExcel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblExportExcel_LinkClicked);
             // 
-            // txtbxTestError
+            // listViewTestScripts
             // 
-            this.txtbxTestError.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.listViewTestScripts.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtbxTestError.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(44)))));
-            this.txtbxTestError.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtbxTestError.ForeColor = System.Drawing.Color.White;
-            this.txtbxTestError.Location = new System.Drawing.Point(7, 26);
-            this.txtbxTestError.Multiline = true;
-            this.txtbxTestError.Name = "txtbxTestError";
-            this.txtbxTestError.ReadOnly = true;
-            this.txtbxTestError.Size = new System.Drawing.Size(719, 352);
-            this.txtbxTestError.TabIndex = 17;
+            this.listViewTestScripts.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(44)))));
+            this.listViewTestScripts.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.listViewTestScripts.CheckBoxes = true;
+            this.listViewTestScripts.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.clmClassname,
+            this.clmTestScript,
+            this.clmTestStatus,
+            this.clmDescription,
+            this.clmLastError});
+            this.listViewTestScripts.ForeColor = System.Drawing.Color.White;
+            this.listViewTestScripts.FullRowSelect = true;
+            this.listViewTestScripts.Location = new System.Drawing.Point(15, 35);
+            this.listViewTestScripts.Name = "listViewTestScripts";
+            this.listViewTestScripts.Size = new System.Drawing.Size(872, 536);
+            this.listViewTestScripts.TabIndex = 33;
+            this.listViewTestScripts.UseCompatibleStateImageBehavior = false;
+            this.listViewTestScripts.View = System.Windows.Forms.View.Details;
+            this.listViewTestScripts.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listViewTestScripts_ColumnClick);
+            this.listViewTestScripts.KeyUp += new System.Windows.Forms.KeyEventHandler(this.resultsListView_KeyUp);
             // 
-            // lblTestStatus
+            // clmClassname
             // 
-            this.lblTestStatus.AutoSize = true;
-            this.lblTestStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTestStatus.ForeColor = System.Drawing.Color.White;
-            this.lblTestStatus.Location = new System.Drawing.Point(7, 5);
-            this.lblTestStatus.Name = "lblTestStatus";
-            this.lblTestStatus.Size = new System.Drawing.Size(70, 15);
-            this.lblTestStatus.TabIndex = 16;
-            this.lblTestStatus.Text = "Test Status:";
+            this.clmClassname.Text = "Class Name";
+            this.clmClassname.Width = 150;
             // 
-            // panel6
+            // clmTestScript
             // 
-            this.panel6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(44)))));
-            this.panel6.Controls.Add(this.label2);
-            this.panel6.Controls.Add(this.txtbxTestDescription);
-            this.panel6.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel6.Location = new System.Drawing.Point(0, 0);
-            this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(736, 111);
-            this.panel6.TabIndex = 16;
+            this.clmTestScript.Text = "Test Script";
+            this.clmTestScript.Width = 150;
             // 
-            // label2
+            // clmTestStatus
             // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.ForeColor = System.Drawing.Color.White;
-            this.label2.Location = new System.Drawing.Point(4, 6);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(95, 15);
-            this.label2.TabIndex = 17;
-            this.label2.Text = "Test Description";
+            this.clmTestStatus.Text = "Status";
+            this.clmTestStatus.Width = 150;
             // 
-            // txtbxTestDescription
+            // clmDescription
             // 
-            this.txtbxTestDescription.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtbxTestDescription.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(44)))));
-            this.txtbxTestDescription.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtbxTestDescription.ForeColor = System.Drawing.Color.White;
-            this.txtbxTestDescription.Location = new System.Drawing.Point(7, 25);
-            this.txtbxTestDescription.Multiline = true;
-            this.txtbxTestDescription.Name = "txtbxTestDescription";
-            this.txtbxTestDescription.ReadOnly = true;
-            this.txtbxTestDescription.Size = new System.Drawing.Size(719, 75);
-            this.txtbxTestDescription.TabIndex = 5;
+            this.clmDescription.Text = "Description";
+            this.clmDescription.Width = 400;
             // 
-            // panel5
+            // clmLastError
             // 
-            this.panel5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(44)))));
-            this.panel5.Controls.Add(this.lblApplyFilter);
-            this.panel5.Controls.Add(this.cmbxAttributes);
-            this.panel5.Controls.Add(this.lblTotalScripts);
-            this.panel5.Controls.Add(this.label5);
-            this.panel5.Controls.Add(this.label1);
-            this.panel5.Controls.Add(this.cmbxFilter);
-            this.panel5.Controls.Add(this.label3);
-            this.panel5.Controls.Add(this.trvTestCases);
-            this.panel5.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel5.Location = new System.Drawing.Point(0, 0);
-            this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(319, 520);
-            this.panel5.TabIndex = 10;
+            this.clmLastError.Text = "Last Error";
+            this.clmLastError.Width = 400;
             // 
-            // lblApplyFilter
+            // lblUncheckAll
             // 
-            this.lblApplyFilter.AutoSize = true;
-            this.lblApplyFilter.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblApplyFilter.ForeColor = System.Drawing.Color.White;
-            this.lblApplyFilter.LinkColor = System.Drawing.Color.White;
-            this.lblApplyFilter.Location = new System.Drawing.Point(232, 164);
-            this.lblApplyFilter.Name = "lblApplyFilter";
-            this.lblApplyFilter.Size = new System.Drawing.Size(78, 17);
-            this.lblApplyFilter.TabIndex = 20;
-            this.lblApplyFilter.TabStop = true;
-            this.lblApplyFilter.Text = "Apply Filter";
-            this.lblApplyFilter.Click += new System.EventHandler(this.lblApplyFilter_Click);
+            this.lblUncheckAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lblUncheckAll.AutoSize = true;
+            this.lblUncheckAll.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblUncheckAll.ForeColor = System.Drawing.Color.White;
+            this.lblUncheckAll.LinkColor = System.Drawing.Color.White;
+            this.lblUncheckAll.Location = new System.Drawing.Point(88, 605);
+            this.lblUncheckAll.Name = "lblUncheckAll";
+            this.lblUncheckAll.Size = new System.Drawing.Size(82, 17);
+            this.lblUncheckAll.TabIndex = 35;
+            this.lblUncheckAll.TabStop = true;
+            this.lblUncheckAll.Text = "Uncheck All";
+            this.lblUncheckAll.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblUncheckAll_LinkClicked);
             // 
-            // cmbxAttributes
+            // lblCheckAll
             // 
-            this.cmbxAttributes.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(44)))));
-            this.cmbxAttributes.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.cmbxAttributes.CheckOnClick = true;
-            this.cmbxAttributes.ForeColor = System.Drawing.Color.White;
-            this.cmbxAttributes.FormattingEnabled = true;
-            this.cmbxAttributes.Location = new System.Drawing.Point(12, 80);
-            this.cmbxAttributes.Name = "cmbxAttributes";
-            this.cmbxAttributes.Size = new System.Drawing.Size(298, 77);
-            this.cmbxAttributes.TabIndex = 19;
-            // 
-            // lblTotalScripts
-            // 
-            this.lblTotalScripts.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.lblTotalScripts.AutoSize = true;
-            this.lblTotalScripts.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTotalScripts.ForeColor = System.Drawing.Color.White;
-            this.lblTotalScripts.Location = new System.Drawing.Point(9, 491);
-            this.lblTotalScripts.Name = "lblTotalScripts";
-            this.lblTotalScripts.Padding = new System.Windows.Forms.Padding(0, 5, 0, 0);
-            this.lblTotalScripts.Size = new System.Drawing.Size(47, 20);
-            this.lblTotalScripts.TabIndex = 12;
-            this.lblTotalScripts.Text = "Total: 0";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.ForeColor = System.Drawing.Color.White;
-            this.label5.Location = new System.Drawing.Point(9, 56);
-            this.label5.Name = "label5";
-            this.label5.Padding = new System.Windows.Forms.Padding(0, 5, 0, 0);
-            this.label5.Size = new System.Drawing.Size(57, 20);
-            this.label5.TabIndex = 11;
-            this.label5.Text = "Attributes";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(9, 6);
-            this.label1.Name = "label1";
-            this.label1.Padding = new System.Windows.Forms.Padding(0, 5, 0, 0);
-            this.label1.Size = new System.Drawing.Size(34, 20);
-            this.label1.TabIndex = 9;
-            this.label1.Text = "Filter";
-            // 
-            // cmbxFilter
-            // 
-            this.cmbxFilter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(44)))));
-            this.cmbxFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbxFilter.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.cmbxFilter.ForeColor = System.Drawing.Color.White;
-            this.cmbxFilter.FormattingEnabled = true;
-            this.cmbxFilter.Location = new System.Drawing.Point(12, 31);
-            this.cmbxFilter.Name = "cmbxFilter";
-            this.cmbxFilter.Size = new System.Drawing.Size(298, 21);
-            this.cmbxFilter.TabIndex = 8;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.ForeColor = System.Drawing.Color.White;
-            this.label3.Location = new System.Drawing.Point(9, 171);
-            this.label3.Name = "label3";
-            this.label3.Padding = new System.Windows.Forms.Padding(0, 5, 0, 0);
-            this.label3.Size = new System.Drawing.Size(68, 20);
-            this.label3.TabIndex = 7;
-            this.label3.Text = "Test scripts";
-            // 
-            // trvTestCases
-            // 
-            this.trvTestCases.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.trvTestCases.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(44)))));
-            this.trvTestCases.ForeColor = System.Drawing.Color.White;
-            this.trvTestCases.Location = new System.Drawing.Point(12, 197);
-            this.trvTestCases.Name = "trvTestCases";
-            this.trvTestCases.Size = new System.Drawing.Size(298, 293);
-            this.trvTestCases.TabIndex = 2;
-            this.trvTestCases.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.trvTestCases_AfterCheck);
-            this.trvTestCases.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.trvTestCases_AfterSelect);
-            this.trvTestCases.KeyDown += new System.Windows.Forms.KeyEventHandler(this.trvTestCases_KeyDown);
+            this.lblCheckAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lblCheckAll.AutoSize = true;
+            this.lblCheckAll.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCheckAll.ForeColor = System.Drawing.Color.White;
+            this.lblCheckAll.LinkColor = System.Drawing.Color.White;
+            this.lblCheckAll.Location = new System.Drawing.Point(12, 605);
+            this.lblCheckAll.Name = "lblCheckAll";
+            this.lblCheckAll.Size = new System.Drawing.Size(66, 17);
+            this.lblCheckAll.TabIndex = 34;
+            this.lblCheckAll.TabStop = true;
+            this.lblCheckAll.Text = "Check All";
+            this.lblCheckAll.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblCheckAll_LinkClicked);
             // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1055, 639);
+            this.ClientSize = new System.Drawing.Size(1116, 752);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel4);
             this.Controls.Add(this.panel1);
@@ -463,13 +499,13 @@
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
             this.panel2.ResumeLayout(false);
-            this.panel3.ResumeLayout(false);
-            this.panel7.ResumeLayout(false);
-            this.panel7.PerformLayout();
-            this.panel6.ResumeLayout(false);
-            this.panel6.PerformLayout();
             this.panel5.ResumeLayout(false);
-            this.panel5.PerformLayout();
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel1.PerformLayout();
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -479,15 +515,7 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.Panel panel7;
-        private System.Windows.Forms.TextBox txtbxTestError;
-        private System.Windows.Forms.Label lblTestStatus;
-        private System.Windows.Forms.Panel panel6;
-        private System.Windows.Forms.TextBox txtbxTestDescription;
         private System.Windows.Forms.Panel panel5;
-        private System.Windows.Forms.TreeView trvTestCases;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ProgressBar prgrsbrTestProgress;
         private System.Windows.Forms.LinkLabel lblExecuteTestScripts;
         private System.Windows.Forms.LinkLabel lblLoadAssembly;
@@ -495,17 +523,28 @@
         private System.Windows.Forms.Label lblWatingScripts;
         private System.Windows.Forms.Label lblPassedScripts;
         private System.Windows.Forms.Label lblFailedScripts;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.LinkLabel lblCancel;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ComboBox cmbxFilter;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ComboBox cmbTestRunners;
-        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ComboBox cmbxFilter;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.LinkLabel lblApplyFilter;
+        private System.Windows.Forms.CheckedListBox cmbxAttributes;
+        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label lblTotalScripts;
         private System.Windows.Forms.LinkLabel lblExportExcel;
-        private System.Windows.Forms.CheckedListBox cmbxAttributes;
-        private System.Windows.Forms.LinkLabel lblApplyFilter;
+        private System.Windows.Forms.ListView listViewTestScripts;
+        private System.Windows.Forms.ColumnHeader clmClassname;
+        private System.Windows.Forms.ColumnHeader clmTestScript;
+        private System.Windows.Forms.ColumnHeader clmTestStatus;
+        private System.Windows.Forms.ColumnHeader clmDescription;
+        private System.Windows.Forms.ColumnHeader clmLastError;
+        private System.Windows.Forms.LinkLabel lblUncheckAll;
+        private System.Windows.Forms.LinkLabel lblCheckAll;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.CheckedListBox cmbxClasses;
 
     }
 }
