@@ -76,7 +76,7 @@ namespace RCRunner
             cmbTestRunners.SelectedIndex = 0;
             _testFrameworkRunner = _pluginLoader.TestRunnersPluginList[0];
 
-            lblExportExcel.Visible = _testFrameworkRunner.CanExportResultsToExcel();
+            lblExportExcel.Visible = true;
         }
 
         private void ResetTestExecution()
@@ -89,7 +89,7 @@ namespace RCRunner
             lblTotalScripts.Text = @"Total: 0";
         }
 
-        private void PaintTreeNodeBasedOnTestStatus(TestScript testcaseScript, ListViewItem item)
+        private void UpdateListviewItemBasedOnTestStatus(TestScript testcaseScript, ListViewItem item)
         {
             switch (testcaseScript.TestExecutionStatus)
             {
@@ -109,13 +109,16 @@ namespace RCRunner
                     item.ForeColor = _testWaiting;
                     break;
             }
-            item.SubItems[2].Text = testcaseScript.TestExecutionStatus.ToString();
-            item.SubItems[4].Text = testcaseScript.LastExecutionErrorMsg;
+            
+            item.SubItems[clmTestStatus.Index].Text = testcaseScript.TestExecutionStatus.ToString();
+            item.SubItems[cmlErrorClassification.Index].Text = testcaseScript.ErrorClassification;
+            item.SubItems[clmDuration.Index].Text = testcaseScript.Duration.ToString();
+            item.SubItems[clmLastError.Index].Text = testcaseScript.LastExecutionErrorMsg;
         }
 
         private void OnMethodStatusChanged(TestScript testcasemethod)
         {
-            UpdateTreeview(testcasemethod);
+            UpdateListView(testcasemethod);
 
             var status = testcasemethod.TestExecutionStatus;
 
@@ -153,18 +156,18 @@ namespace RCRunner
             }
         }
 
-        private void UpdateTreeview(TestScript testcaseScript)
+        private void UpdateListView(TestScript testcaseScript)
         {
             if (listViewTestScripts.InvokeRequired)
             {
-                var d = new SetTextCallback(UpdateTreeview);
+                var d = new SetTextCallback(UpdateListView);
                 Invoke(d, new object[] { testcaseScript });
             }
             else
             {
                 var item = listViewTestScripts.FindItemWithText(testcaseScript.Name, true, 0);
                 if (item == null) return;
-                PaintTreeNodeBasedOnTestStatus(testcaseScript, item);
+                UpdateListviewItemBasedOnTestStatus(testcaseScript, item);
             }
         }
 
@@ -188,10 +191,12 @@ namespace RCRunner
                     var item = listViewTestScripts.Items.Add(testMethod.ClassName);
                     item.SubItems.Add(testMethod.Name);
                     item.SubItems.Add(testMethod.TestExecutionStatus.ToString());
+                    item.SubItems.Add(testMethod.ErrorClassification);
                     item.SubItems.Add(testMethod.TestDescription);
+                    item.SubItems.Add(testMethod.Duration.ToString());
                     item.SubItems.Add(testMethod.LastExecutionErrorMsg);
                     item.Tag = testMethod;
-                    PaintTreeNodeBasedOnTestStatus(testMethod, item );
+                    UpdateListviewItemBasedOnTestStatus(testMethod, item);
                 }
             }
             finally
@@ -370,32 +375,17 @@ namespace RCRunner
             Clipboard.SetText(builder.ToString());
         }
 
+
         private void lblExportExcel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (!_testFrameworkRunner.CanExportResultsToExcel()) return;
-
-            var folderDialog = new FolderBrowserDialog
-            {
-                Description = @"Choose the folder that contains the test results"
-            };
-
-            var result = folderDialog.ShowDialog();
-
-            if (result != DialogResult.OK) return;
-
-            var folder = folderDialog.SelectedPath;
-
-            var excelpath = Path.Combine(folder, "result.xlsx");
-
-            _testFrameworkRunner.ExportResultsToExcel(folder, excelpath);
-
-            MessageBox.Show(@"Results exported to " + excelpath);
+            var testScriptList = listViewTestScripts.Items.Cast<ListViewItem>().Select(x => x.Tag as TestScript).ToList();
+            RCRunnerAPI.ExportToExcel("result.xlsx", testScriptList);
+            MessageBox.Show(@"Results exported to " + @"result.xlsx");
         }
 
         private void cmbTestRunners_SelectionChangeCommitted(object sender, EventArgs e)
         {
             _testFrameworkRunner = _pluginLoader.TestRunnersPluginList[cmbTestRunners.SelectedIndex];
-            lblExportExcel.Visible = _testFrameworkRunner.CanExportResultsToExcel();
         }
 
         private void lblApplyFilter_Click(object sender, EventArgs e)

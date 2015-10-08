@@ -23,14 +23,14 @@ namespace RCRunner.Shared.Lib
         Waiting,
         Running,
     }
-
-
-
+    
     /// <summary>
     /// Class that runs an automated test case in a thread
     /// </summary>
     public class TestScript
     {
+        public string ErrorClassification;
+        public TimeSpan Duration;
         /// <summary>
         /// Name of the class that this test belongs to
         /// </summary>
@@ -126,7 +126,7 @@ namespace RCRunner.Shared.Lib
                 try
                 {
                     //Thread.Sleep(5000); //to debug
-                    _testFrameworkRunner.RunTest(Name);
+                    _testFrameworkRunner.RunTest(this);
                     OnTestRunFinished(null);
                 }
                 finally

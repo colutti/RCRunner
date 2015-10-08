@@ -102,7 +102,7 @@ namespace RCRunner.Shared.Lib
         }
 
         /// <summary>
-        ///     Loadas an assembly that contatis a test plugin
+        ///     Loads an assembly that contatis a test plugin
         /// </summary>
         /// <param name="file"></param>
         private void LoadTestExecutionAssembly(string file)
@@ -127,6 +127,10 @@ namespace RCRunner.Shared.Lib
             }
         }
 
+        /// <summary>
+        /// Call all the plugins notifying that a test finished to run
+        /// </summary>
+        /// <param name="testCase"></param>
         public void CallAfterTestExecutionPlugins(string testCase)
         {
             lock (_lockObj)
@@ -138,24 +142,30 @@ namespace RCRunner.Shared.Lib
             }
         }
 
-        public void CallBeforeTestRunPlugins()
+        /// <summary>
+        /// Call all the plugins with "before all tests execution" notification
+        /// </summary>
+        public void CallBeforeTestRunPlugins(List<TestScript> testCasesList)
         {
             lock (_lockObj)
             {
                 foreach (var testExecution in TestExecutionPlugiList)
                 {
-                    testExecution.BeforeTestRun();
+                    testExecution.BeforeTestRun(testCasesList);
                 }
             }
         }
 
-        public void CallAfterTestRunPlugins()
+        /// <summary>
+        /// Call all the plugins with "after all tests execution" notification
+        /// </summary>
+        public void CallAfterTestRunPlugins(List<TestScript> testCasesList)
         {
             lock (_lockObj)
             {
                 foreach (var testExecution in TestExecutionPlugiList)
                 {
-                    testExecution.AfterTestRun();
+                    testExecution.AfterTestRun(testCasesList);
                 }
             }
         }

@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleTestExecutionPlugin",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RCRunner.Shared.Lib", "RCRunner.Shared.Lib\RCRunner.Shared.Lib.csproj", "{53FA569A-05A5-47F4-A6ED-F15FBFA7E342}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SendEmailPlugin", "SendEmailPlugin\SendEmailPlugin.csproj", "{F53B612D-957C-4239-8DB5-F4176A7A99BD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,12 @@ Global
 		{53FA569A-05A5-47F4-A6ED-F15FBFA7E342}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{53FA569A-05A5-47F4-A6ED-F15FBFA7E342}.Release|Any CPU.Build.0 = Release|Any CPU
 		{53FA569A-05A5-47F4-A6ED-F15FBFA7E342}.Release|x86.ActiveCfg = Release|Any CPU
+		{F53B612D-957C-4239-8DB5-F4176A7A99BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F53B612D-957C-4239-8DB5-F4176A7A99BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F53B612D-957C-4239-8DB5-F4176A7A99BD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F53B612D-957C-4239-8DB5-F4176A7A99BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F53B612D-957C-4239-8DB5-F4176A7A99BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F53B612D-957C-4239-8DB5-F4176A7A99BD}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

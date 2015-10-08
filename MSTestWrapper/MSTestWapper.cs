@@ -1,17 +1,76 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Xml.Serialization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OfficeOpenXml;
-using OfficeOpenXml.Style;
+using RCRunner.Shared.Lib;
 using RCRunner.Shared.Lib.PluginsStruct;
 
 namespace MSTestWrapper
 {
+
+    public class ErrorClassificationSuggestionItem
+    {
+        [XmlElement("PartialDescription")]
+        public string PartialDescription;
+        [XmlElement("Suggestion")]
+        public string Suggestion;
+    }
+
+    /// <summary>
+    /// This is a class that will try to suggest error classification based on the analysis of the error. The configuration will be in a XML file,
+    /// where you can tell how to find out for specific errors and return suggested classifications
+    /// </summary>
+    [XmlRoot("ErrorClassificationSuggestionList")]
+    public class ErrorClassificationSuggestionList
+    {
+        [XmlElement("Item")]
+        public List<ErrorClassificationSuggestionItem> ErrorClassificationList;
+
+        public ErrorClassificationSuggestionList()
+        {
+            ErrorClassificationList = new List<ErrorClassificationSuggestionItem>();   
+        }
+        
+        /// <summary>
+        /// Given an error message, this method will try to return an error classification suggestion
+        /// </summary>
+        /// <param name="errorMsg"></param>
+        /// <returns></returns>
+        public string GetErrorClassificationSugestion(string errorMsg)
+        {
+            var suggestion = ErrorClassificationList.FirstOrDefault(s => errorMsg.Contains(s.PartialDescription));
+
+            return suggestion != null ? suggestion.Suggestion : string.Empty;
+        }
+
+        /// <summary>
+        /// Contructs and reads the configuration from a XML file
+        /// </summary>
+        /// <returns></returns>
+        public static ErrorClassificationSuggestionList CreateNew()
+        {
+
+            const string errorClassificationSuggestionXmlPath = "errorClassificationSuggestionList.xml";
+
+            var errorClassificationSuggestionList = new ErrorClassificationSuggestionList();
+
+            if (!File.Exists(errorClassificationSuggestionXmlPath)) return errorClassificationSuggestionList;
+
+            var ser = new XmlSerializer(typeof(ErrorClassificationSuggestionList));
+
+            using (var readtext = new StreamReader(errorClassificationSuggestionXmlPath))
+            {
+                errorClassificationSuggestionList = (ErrorClassificationSuggestionList)ser.Deserialize(readtext);
+            }
+            
+            return errorClassificationSuggestionList;
+        }
+    }
+    
     /// <summary>
     /// A test wrapper that implements the ITestFrameworkRunner as an adapter for the MSTest test framework
     /// </summary>
@@ -19,6 +78,12 @@ namespace MSTestWrapper
     {
         private string _assemblyPath;
         private string _resultFilePath;
+        private readonly ErrorClassificationSuggestionList _errorClassificationSuggestionList;
+
+        public MSTestWrapper()
+        {
+            _errorClassificationSuggestionList = ErrorClassificationSuggestionList.CreateNew();
+        }
 
         /// <summary>
         /// Returns the assembly that contains the test cases to run
@@ -162,23 +227,46 @@ namespace MSTestWrapper
             return errorMsg.ToLower().Contains("timed out after");
         }
 
+
         /// <summary>
         /// Executes a test case specified by the testcase param
         /// </summary>
-        /// <param name="testCase">The test case to run</param>
-        public override void RunTest(string testCase)
+        /// <param name="testScript"></param>
+        public override void RunTest(TestScript testScript)
         {
-            var errorMsg = string.Empty;
+            var timer = new Stopwatch();
+            timer.Start();
+            try
+            {
+                var errorMsg = string.Empty;
 
-            var testResult = InternalRunTest(testCase, ref errorMsg);
+                var testResult = InternalRunTest(testScript.Name, ref errorMsg);
 
-            if (testResult) return;
+                if (testResult) return;
 
-            if (!IsTimeOutError(errorMsg)) throw new Exception(errorMsg);
+                if (!IsTimeOutError(errorMsg))
+                {
+                    // when a test fails, I will try to find out why, based on the configuration XML file that tells me how to search for specific errors
+                    // and return a error classification sugestion
+                    testScript.ErrorClassification = _errorClassificationSuggestionList.GetErrorClassificationSugestion(errorMsg);
+                    throw new Exception(errorMsg);
+                }
 
-            testResult = InternalRunTest(testCase, ref errorMsg);
+                testResult = InternalRunTest(testScript.Name, ref errorMsg);
 
-            if (!testResult) throw new Exception(errorMsg);
+                if (testResult) return;
+
+                // when a test fails, I will try to find out why, based on the configuration XML file that tells me how to search for specific errors
+                // and return a error classification sugestion
+                testScript.ErrorClassification = _errorClassificationSuggestionList.GetErrorClassificationSugestion(errorMsg);
+
+                throw new Exception(errorMsg);
+            }
+            finally
+            {
+                timer.Stop();
+                testScript.Duration = timer.Elapsed;
+            }
         }
 
         /// <summary>
@@ -249,145 +337,6 @@ namespace MSTestWrapper
         public override string GetDisplayName()
         {
             return "MSTest";
-        }
-
-        /// <summary>
-        /// Returns if the runner can export results to excel or not
-        /// </summary>
-        /// <returns></returns>
-        public override bool CanExportResultsToExcel()
-        {
-            return true;
-        }
-
-        /// <summary>
-        /// Exports the results files of a folder to excel
-        /// </summary>
-        /// <param name="resultsPath"></param>
-        /// <param name="excelFilepath"></param>
-        public override void ExportResultsToExcel(string resultsPath, string excelFilepath)
-        {
-            int aborted = 0, passed = 0, failed = 0, notexecuted = 0;
-
-            // Get a refrence to Excel
-            File.Delete(excelFilepath);
-            var newFile = new FileInfo(excelFilepath);
-            var oXl = new ExcelPackage(newFile);
-
-            // Create a workbook and add sheet
-            var oSheet = oXl.Workbook.Worksheets.Add("TRX");
-
-            oSheet.Name = "trx";
-
-            // Write the column names to the work sheet
-            oSheet.Cells[1, 1].Value = "Processed File Name";
-            oSheet.Cells[1, 2].Value = "Duration";
-            oSheet.Cells[1, 3].Value = "Test ID";
-            oSheet.Cells[1, 4].Value = "Test Name";
-            oSheet.Cells[1, 5].Value = "Test Class";
-            oSheet.Cells[1, 6].Value = "Test Outcome";
-            oSheet.Cells[1, 7].Value = "Test Error";
-
-            var row = 2;
-
-            // For each .trx file in the given folder process it
-            var filesList = Directory.GetFiles(resultsPath, "*.trx", SearchOption.AllDirectories);
-
-            foreach (var file in filesList)
-            {
-                // ReSharper disable once AssignNullToNotNullAttribute
-                var secondTryFile = Path.Combine(Path.GetDirectoryName(file), Path.GetFileNameWithoutExtension(file) + "(2)" + ".trx");
-
-                if (File.Exists(secondTryFile))
-                {
-                    continue;
-                }
-
-                // Deserialize TestRunType object from the trx file
-                var fileStreamReader = new StreamReader(file);
-
-                var xmlSer = new XmlSerializer(typeof(TestRunType));
-
-                var testRunType = (TestRunType)xmlSer.Deserialize(fileStreamReader);
-
-                if (!testRunType.Items.OfType<ResultsType>().Any()) continue;
-
-                var resultType = testRunType.Items.OfType<ResultsType>().FirstOrDefault();
-
-                if (resultType == null || !resultType.Items.OfType<UnitTestResultType>().Any()) continue;
-
-                if (!testRunType.Items.OfType<TestDefinitionType>().Any()) continue;
-
-                var testDefinition = testRunType.Items.OfType<TestDefinitionType>().FirstOrDefault();
-
-                var unitTestResultType = resultType.Items.OfType<UnitTestResultType>().FirstOrDefault();
-
-                if (unitTestResultType == null) continue;
-
-                var className = string.Empty;
-
-                if (testDefinition != null)
-                {
-                    var testType = testDefinition.Items.OfType<UnitTestType>().FirstOrDefault();
-
-                    if (testType != null)
-                    {
-                        className = testType.TestMethod.className;
-                    }
-                }
-
-                oSheet.Cells[row, 1].Value = file;
-                oSheet.Cells[row, 2].Value = unitTestResultType.duration;
-                oSheet.Cells[row, 3].Value = unitTestResultType.testId;
-                oSheet.Cells[row, 4].Value = unitTestResultType.testName;
-                oSheet.Cells[row, 5].Value = className;
-                oSheet.Cells[row, 6].Value = unitTestResultType.outcome;
-
-
-                if (0 == String.Compare(unitTestResultType.outcome, "Aborted", StringComparison.Ordinal))
-                {
-                    oSheet.Cells[row, 1, row, 7].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                    oSheet.Cells[row, 1, row, 7].Style.Fill.BackgroundColor.SetColor(Color.Yellow);
-                    aborted++;
-                }
-
-                else if (0 == String.Compare(unitTestResultType.outcome, "Passed", StringComparison.Ordinal))
-                {
-                    oSheet.Cells[row, 1, row, 7].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                    oSheet.Cells[row, 1, row, 7].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(198, 239, 206));
-                    passed++;
-                }
-
-                else if (0 == String.Compare(unitTestResultType.outcome, "Failed", StringComparison.Ordinal))
-                {
-                    oSheet.Cells[row, 1, row, 7].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                    oSheet.Cells[row, 7].Value = ((System.Xml.XmlNode[])(((OutputType)(unitTestResultType.Items[0])).ErrorInfo.Message))[0].Value;
-                    oSheet.Cells[row, 1, row, 7].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(255, 199, 206));
-                    failed++;
-                }
-
-                else if (0 == String.Compare(unitTestResultType.outcome, "NotExecuted", StringComparison.Ordinal))
-                {
-                    oSheet.Cells[row, 1, row, 7].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                    oSheet.Cells[row, 1, row, 7].Style.Fill.BackgroundColor.SetColor((Color.SlateGray));
-                    notexecuted++;
-                }
-
-                row++;
-            }
-
-            row += 2;
-
-            // Add summmary
-            oSheet.Cells[row++, 1].Value = "Testcases Passed = " + passed;
-            oSheet.Cells[row++, 1].Value = "Testcases Failed = " + failed;
-            oSheet.Cells[row++, 1].Value = "Testcases Aborted = " + aborted;
-            oSheet.Cells[row++, 1].Value = "Testcases NotExecuted = " + notexecuted;
-
-            // Autoformat the sheet
-            oSheet.Cells[1, 1, row, 7].AutoFitColumns();
-
-            oXl.Save();
         }
 
         /// <summary>

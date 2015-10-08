@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using OfficeOpenXml;
 using RCRunner.Shared.Lib.PluginsStruct;
 
 namespace RCRunner.Shared.Lib
@@ -11,6 +13,8 @@ namespace RCRunner.Shared.Lib
     public class RCRunnerAPI
     {
         public readonly List<TestScript> TestClassesList;
+
+        private List<TestScript> _runningTestCases; 
 
         private readonly TestScriptsController _testCasesController;
 
@@ -27,7 +31,8 @@ namespace RCRunner.Shared.Lib
 
             if (Done())
             {
-                _pluginLoader.CallAfterTestRunPlugins();
+
+                _pluginLoader.CallAfterTestRunPlugins(_runningTestCases);
             }
         }
 
@@ -156,8 +161,9 @@ namespace RCRunner.Shared.Lib
         {
             RunningTestsCount.Reset();
             _canceled = false;
+            _runningTestCases = testCasesList;
 
-            _pluginLoader.CallBeforeTestRunPlugins();
+            _pluginLoader.CallBeforeTestRunPlugins(testCasesList);
 
             foreach (var testMethod in testCasesList)
             {
@@ -171,6 +177,63 @@ namespace RCRunner.Shared.Lib
         public bool Done()
         {
             return RunningTestsCount.Done();
+        }
+
+
+        /// <summary>
+        /// Exports a test run to excel
+        /// </summary>
+        /// <param name="excelFilepath"></param>
+        /// <param name="testCasesList"></param>
+        public static void ExportToExcel(string excelFilepath, List<TestScript> testCasesList)
+        {
+            if (!testCasesList.Any()) return;
+
+            File.Delete(excelFilepath);
+
+            var newFile = new FileInfo(excelFilepath);
+            var oXl = new ExcelPackage(newFile);
+
+            // Create a workbook and add sheet
+            var oSheet = oXl.Workbook.Worksheets.Add("Report");
+
+            oSheet.Name = "Report";
+
+            // Write the column names to the work sheet
+            oSheet.Cells[1, 1].Value = "Class Name";
+            oSheet.Cells[1, 2].Value = "Test Script";
+            oSheet.Cells[1, 3].Value = "Status";
+            oSheet.Cells[1, 4].Value = "Error Classification";
+            oSheet.Cells[1, 5].Value = "Description";
+            oSheet.Cells[1, 6].Value = "Duration";
+            oSheet.Cells[1, 7].Value = "Last Error";
+
+            var row = 2;
+
+            foreach (var item in testCasesList)
+            {
+
+                oSheet.Cells[row, 1].Value = item.ClassName;
+                oSheet.Cells[row, 2].Value = item.Name;
+                oSheet.Cells[row, 3].Value = item.TestExecutionStatus.ToString();
+                oSheet.Cells[row, 4].Value = item.ErrorClassification;
+                oSheet.Cells[row, 5].Value = item.TestDescription;
+                oSheet.Cells[row, 6].Value = item.Duration.ToString();
+                oSheet.Cells[row, 7].Value = item.LastExecutionErrorMsg;
+
+                row++;
+            }
+
+            row += 2;
+
+            // Add summmary
+            oSheet.Cells[row++, 1].Value = "Testcases Passed = " + testCasesList.Count(x => x.TestExecutionStatus == TestExecutionStatus.Passed);
+            oSheet.Cells[row++, 1].Value = "Testcases Failed = " + testCasesList.Count(x => x.TestExecutionStatus == TestExecutionStatus.Failed);
+
+            // Autoformat the sheet
+            oSheet.Cells[1, 1, row, 7].AutoFitColumns();
+
+            oXl.Save();
         }
 
     }

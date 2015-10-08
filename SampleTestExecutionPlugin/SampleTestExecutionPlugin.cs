@@ -1,4 +1,6 @@
-﻿using RCRunner.Shared.Lib.PluginsStruct;
+﻿using System.Collections.Generic;
+using RCRunner.Shared.Lib;
+using RCRunner.Shared.Lib.PluginsStruct;
 
 namespace SampleTestExecutionPlugin
 {
@@ -16,7 +18,7 @@ namespace SampleTestExecutionPlugin
         /// <summary>
         /// Called before a test run begins
         /// </summary>
-        public override void BeforeTestRun()
+        public override void BeforeTestRun(List<TestScript> testCasesList)
         {
             //MessageBox.Show(@"SampleTestExecutionPlugin.BeforeTestRun");
         }
@@ -24,7 +26,7 @@ namespace SampleTestExecutionPlugin
         /// <summary>
         /// Called after a test run ends
         /// </summary>
-        public override void AfterTestRun()
+        public override void AfterTestRun(List<TestScript> testCasesList)
         {
             //MessageBox.Show(@"SampleTestExecutionPlugin.AfterTestRun");
         }

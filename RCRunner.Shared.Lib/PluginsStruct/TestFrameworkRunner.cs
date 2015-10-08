@@ -8,8 +8,8 @@
         /// <summary>
         ///     Executes a test case specified by the testcase param
         /// </summary>
-        /// <param name="testCase">The test case to run</param>
-        public virtual void  RunTest(string testCase) {}
+        /// <param name="testScript"></param>
+        public virtual void  RunTest(TestScript testScript) {}
 
         /// <summary>
         ///     Returns the assembly that contains the test cases to run
@@ -67,21 +67,6 @@
         {
             return string.Empty;
         }
-
-        /// <summary>
-        ///     Returns if the runner can export results to excel or not
-        /// </summary>
-        /// <returns></returns>
-        public virtual bool CanExportResultsToExcel()
-        {
-            return false;
-        }
-
-        /// <summary>
-        ///     Exports the results files of a folder to excel
-        /// </summary>
-        /// <param name="resultsPath"></param>
-        /// <param name="excelFilepath"></param>
-        public virtual void ExportResultsToExcel(string resultsPath, string excelFilepath) { }
+       
     }
 }
