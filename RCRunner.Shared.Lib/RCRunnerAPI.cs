@@ -55,7 +55,7 @@ namespace RCRunner.Shared.Lib
         public RCRunnerAPI()
         {
             RunningTestsCount = new RunningTestsCount();
-            _testCasesController = new TestScriptsController();
+            _testCasesController = new TestScriptsController(RunningTestsCount);
             TestClassesList = new List<TestScript>();
             CustomAttributesList = new List<string>();
             _testCasesController.TestCaseStatusChanged = OnMethodStatusChanged;
@@ -157,7 +157,7 @@ namespace RCRunner.Shared.Lib
             }
         }
 
-        public void RunTestCases(List<TestScript> testCasesList, int threads)
+        public void RunTestCases(List<TestScript> testCasesList)
         {
             RunningTestsCount.Reset();
             _canceled = false;
@@ -167,11 +167,12 @@ namespace RCRunner.Shared.Lib
 
             foreach (var testMethod in testCasesList)
             {
+                testMethod.RetryCount = 0;
                 testMethod.TestExecutionStatus = TestExecutionStatus.Waiting;
                 testMethod.LastExecutionErrorMsg = string.Empty;
                 OnMethodStatusChanged(testMethod);
             }
-            _testCasesController.DoWork(testCasesList, threads);
+            _testCasesController.DoWork(testCasesList);
         }
 
         public bool Done()

@@ -74,6 +74,12 @@ namespace RCRunner.Shared.Lib
                     Interlocked.Increment(ref TotWaiting);
                     break;
                 }
+                case TestExecutionStatus.WillRetry:
+                {
+                    Interlocked.Decrement(ref TotRunning);
+                    Interlocked.Increment(ref TotWaiting);
+                    break;
+                }
             }
         }
 

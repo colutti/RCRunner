@@ -217,15 +217,6 @@ namespace MSTestWrapper
             }
         }
 
-        /// <summary>
-        /// Check if the error message returned by the test case is a timeout error
-        /// </summary>
-        /// <param name="errorMsg">The error message</param>
-        /// <returns></returns>
-        private static bool IsTimeOutError(string errorMsg)
-        {
-            return errorMsg.ToLower().Contains("timed out after");
-        }
 
 
         /// <summary>
@@ -241,18 +232,6 @@ namespace MSTestWrapper
                 var errorMsg = string.Empty;
 
                 var testResult = InternalRunTest(testScript.Name, ref errorMsg);
-
-                if (testResult) return;
-
-                if (!IsTimeOutError(errorMsg))
-                {
-                    // when a test fails, I will try to find out why, based on the configuration XML file that tells me how to search for specific errors
-                    // and return a error classification sugestion
-                    testScript.ErrorClassification = _errorClassificationSuggestionList.GetErrorClassificationSugestion(errorMsg);
-                    throw new Exception(errorMsg);
-                }
-
-                testResult = InternalRunTest(testScript.Name, ref errorMsg);
 
                 if (testResult) return;
 

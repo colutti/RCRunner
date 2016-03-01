@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using RCRunner.Shared.Lib.PluginsStruct;
 
@@ -6,6 +7,10 @@ namespace RCRunner.Shared.Lib
 {
     public class TestScriptsController
     {
+        private readonly RunningTestsCount _runningTestsCount;
+        
+        private readonly object _obj;
+        
         /// <summary>
         ///     Event to check if the test run was canceled
         /// </summary>
@@ -26,15 +31,11 @@ namespace RCRunner.Shared.Lib
         /// </summary>
         private TestFrameworkRunner _testFrameworkRunner;
 
-        /// <summary>
-        ///     Total of running test scripts
-        /// </summary>
-        private int _totRunningScripts;
-
-        /// <summary>
-        /// Number of threads to run tests at the same time
-        /// </summary>
-        private int _threads;
+        public TestScriptsController(RunningTestsCount runningTestsCount)
+        {
+            _runningTestsCount = runningTestsCount;
+            _obj = new object();
+        }
 
         /// <summary>
         ///     Check if the test run was canceled by the user
@@ -42,7 +43,7 @@ namespace RCRunner.Shared.Lib
         /// <returns></returns>
         protected virtual bool OnCanceled()
         {
-            CheckCanceled handler = Canceled;
+            var handler = Canceled;
             return handler != null && handler();
         }
 
@@ -62,7 +63,16 @@ namespace RCRunner.Shared.Lib
         /// <param name="testcaseScript"></param>
         private void OnTaskTestRunFinishedEvent(TestScript testcaseScript)
         {
-            _totRunningScripts--;
+            if (testcaseScript.TestExecutionStatus == TestExecutionStatus.Failed && ShouldRetry(testcaseScript.LastExecutionErrorMsg))
+            {
+                if (testcaseScript.RetryCount < 1)
+                {
+                    RemoveItemThreadSafe(testcaseScript);
+                    testcaseScript.TestExecutionStatus = TestExecutionStatus.WillRetry;
+                    testcaseScript.RetryCount++;
+                    AddItemThreadSafe(testcaseScript);
+                }
+            }
             OnMethodStatusChanged(testcaseScript);
         }
 
@@ -75,27 +85,78 @@ namespace RCRunner.Shared.Lib
             _testFrameworkRunner = testFrameworkRunner;
         }
 
+        private static bool ShouldRetry(string errorMsg)
+        {
+            return errorMsg.ToLower().Contains("timed out after") || errorMsg.ToLower().Contains("unable to connect to the remote server") ||
+                errorMsg.ToLower().Contains("element is not clickable") || errorMsg.ToLower().Contains("failed to start up socket") ||
+                errorMsg.ToLower().Contains("a exception with a null response was") || errorMsg.ToLower().Contains("not available and is not among the last");
+        }
+
+        private void AddItemThreadSafe(TestScript testScript)
+        {
+            lock (_obj)
+            {
+                _testCasesList.Add(testScript);
+            }
+
+        }
+
+        private TestScript GetItemThreadSafe()
+        {
+            lock (_obj)
+            {
+                if (_testCasesList.Count <= 0) return null;
+
+                var testScript = _testCasesList.First();
+                _testCasesList.Remove(testScript);
+                return testScript;
+            }
+        }
+
+        private void RemoveItemThreadSafe(TestScript testScript)
+        {
+            lock (_obj)
+            {
+                _testCasesList.Remove(testScript);
+            }
+        }
+
+
         /// <summary>
         ///     Method that will run all the tests listed in _testCasesList
         /// </summary>
         private void DoWorkCore()
         {
-            _totRunningScripts = 0;
+            _runningTestsCount.TotRunning = 0;
 
-            foreach (TestScript testMethod in _testCasesList)
+            var testScript = GetItemThreadSafe();
+
+            while (testScript != null) 
             {
-                while (_totRunningScripts >= _threads)
+                var threads = SeleniumGridApi.GetNumberAvailableBrownsers();
+
+                while (_runningTestsCount.TotRunning >= threads)
                 {
                     if (OnCanceled()) return;
+                    threads = SeleniumGridApi.GetNumberAvailableBrownsers();
                 }
 
-                _totRunningScripts++;
                 if (OnCanceled()) return;
-                testMethod.SetTestRunner(_testFrameworkRunner);
-                testMethod.TestExecutionStatus = TestExecutionStatus.Running;
-                OnMethodStatusChanged(testMethod);
-                testMethod.TestRunFinished = OnTaskTestRunFinishedEvent;
-                testMethod.DoWork();
+
+                testScript.SetTestRunner(_testFrameworkRunner);
+                testScript.TestExecutionStatus = TestExecutionStatus.Running;
+                testScript.TestRunFinished = OnTaskTestRunFinishedEvent;
+
+                OnMethodStatusChanged(testScript);
+
+                testScript.DoWork();
+                
+                testScript = GetItemThreadSafe();
+
+                while (testScript == null && _runningTestsCount.TotRunning > 0)
+                {
+                    testScript = GetItemThreadSafe();
+                }
             }
         }
 
@@ -103,10 +164,8 @@ namespace RCRunner.Shared.Lib
         ///     Method that will call DoWorkCore to run all the tests in testCasesList in a thread
         /// </summary>
         /// <param name="testCasesList">The list of test cases to run</param>
-        /// <param name="threads">Max threads to run tests</param>
-        public void DoWork(List<TestScript> testCasesList, int threads)
+        public void DoWork(List<TestScript> testCasesList)
         {
-            _threads = threads;
             _testCasesList = testCasesList;
             var t = new Thread(DoWorkCore);
             t.Start();

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
@@ -7,7 +8,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using RCRunner.Properties;
 using RCRunner.Shared.Lib;
 using RCRunner.Shared.Lib.PluginsStruct;
 
@@ -26,6 +26,7 @@ namespace RCRunner
         private readonly Color _testPassed = Color.GreenYellow;
         private readonly Color _testRunning = Color.CornflowerBlue;
         private readonly Color _testWaiting = Color.DarkOrange;
+        private readonly Color _testRetry = Color.Gray;
         private TestFrameworkRunner _testFrameworkRunner;
 
         public FrmMain()
@@ -55,6 +56,7 @@ namespace RCRunner
             cmbxFilter.Items.Add(TestExecutionStatus.Passed);
             cmbxFilter.Items.Add(TestExecutionStatus.Running);
             cmbxFilter.Items.Add(TestExecutionStatus.Waiting);
+            cmbxFilter.Items.Add(TestExecutionStatus.WillRetry);
             cmbxFilter.SelectedIndex = 0;
 
             ResetTestExecution();
@@ -108,6 +110,10 @@ namespace RCRunner
                 case TestExecutionStatus.Waiting:
                     item.ForeColor = _testWaiting;
                     break;
+                case TestExecutionStatus.WillRetry:
+                    item.ForeColor = _testRetry;
+                    break;
+
             }
             
             item.SubItems[clmTestStatus.Index].Text = testcaseScript.TestExecutionStatus.ToString();
@@ -281,13 +287,16 @@ namespace RCRunner
 
             var testCasesList = new List<TestScript>();
 
-            testCasesList.AddRange(from ListViewItem item in listViewTestScripts.CheckedItems select item.Tag as TestScript);
+            foreach (ListViewItem item in listViewTestScripts.CheckedItems)
+            {
+                testCasesList.Add(item.Tag as TestScript);    
+            }
 
             if (testCasesList.Any())
             {
                 var testResultsFolder = CreateTestResultsFolder();
                 _testFrameworkRunner.SetTestResultsFolder(testResultsFolder);
-                _rcRunner.RunTestCases(testCasesList, Settings.Default.MaxThreads);
+                _rcRunner.RunTestCases(testCasesList);
             }
             else
             {

@@ -22,13 +22,15 @@ namespace RCRunner.Shared.Lib
         Active,
         Waiting,
         Running,
+        WillRetry,
     }
-    
+
     /// <summary>
     /// Class that runs an automated test case in a thread
     /// </summary>
     public class TestScript
     {
+        public int RetryCount;
         public string ErrorClassification;
         public TimeSpan Duration;
         /// <summary>
@@ -125,8 +127,10 @@ namespace RCRunner.Shared.Lib
             {
                 try
                 {
-                    //Thread.Sleep(5000); //to debug
+                    //var rnd = new Random();
+                    //Thread.Sleep(rnd.Next(2000, 10000)); //to debug
                     _testFrameworkRunner.RunTest(this);
+                    //throw new Exception("erro");
                     OnTestRunFinished(null);
                 }
                 finally

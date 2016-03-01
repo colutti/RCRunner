@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -86,9 +87,16 @@ namespace RCRunner.Console
 
             var testList = FilterTestListByAttr(RCRunnerAPI.TestClassesList, Options.Attr, Options.Class);
 
+            var testBag = new List<TestScript>();
+
+            foreach (var testScript in testList)
+            {
+                testBag.Add(testScript);
+            }
+
             _totScripts = testList.Count();
 
-            RCRunnerAPI.RunTestCases(testList, Options.Threads);
+            RCRunnerAPI.RunTestCases(testBag);
 
             if (_totFailed > 0) return (int)ExitCode.Failed;
 

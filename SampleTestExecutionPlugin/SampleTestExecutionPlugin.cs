@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using RCRunner.Shared.Lib;
 using RCRunner.Shared.Lib.PluginsStruct;
 
