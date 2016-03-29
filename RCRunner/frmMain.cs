@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
@@ -115,7 +114,7 @@ namespace RCRunner
                     break;
 
             }
-            
+
             item.SubItems[clmTestStatus.Index].Text = testcaseScript.TestExecutionStatus.ToString();
             item.SubItems[cmlErrorClassification.Index].Text = testcaseScript.ErrorClassification;
             item.SubItems[clmDuration.Index].Text = testcaseScript.Duration.ToString();
@@ -207,7 +206,7 @@ namespace RCRunner
             }
             finally
             {
-                listViewTestScripts.ListViewItemSorter = new ListViewItemComparer(0); 
+                listViewTestScripts.ListViewItemSorter = new ListViewItemComparer(0);
                 listViewTestScripts.EndUpdate();
             }
         }
@@ -216,7 +215,7 @@ namespace RCRunner
         {
             foreach (var testScript in testClassesList.Where(testScript => !cmbxClasses.Items.Contains(testScript.ClassName)))
             {
-               cmbxClasses.Items.Add(testScript.ClassName, true);
+                cmbxClasses.Items.Add(testScript.ClassName, true);
             }
             cmbxClasses.Sorted = true;
         }
@@ -225,7 +224,7 @@ namespace RCRunner
         {
             if (_pluginLoader.TestRunnersPluginList.Count <= 0)
             {
-                MessageBox.Show(string.Format(@"No test framework plugins found. Make sure you have a test framework plugin at {0} before opening the runner", 
+                MessageBox.Show(string.Format(@"No test framework plugins found. Make sure you have a test framework plugin at {0} before opening the runner",
                     Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Plugins\TestRunners")), @"Missing plugin", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
@@ -289,7 +288,7 @@ namespace RCRunner
 
             foreach (ListViewItem item in listViewTestScripts.CheckedItems)
             {
-                testCasesList.Add(item.Tag as TestScript);    
+                testCasesList.Add(item.Tag as TestScript);
             }
 
             if (testCasesList.Any())
@@ -325,6 +324,7 @@ namespace RCRunner
                 cmbxAttributes.Enabled = enable;
                 cmbxFilter.Enabled = enable;
                 lblExportExcel.Enabled = enable;
+                lblImportResults.Enabled = enable;
             }
         }
 
@@ -423,6 +423,36 @@ namespace RCRunner
             listViewTestScripts.ListViewItemSorter = new ListViewItemComparer(e.Column);
         }
 
+        private void lblImportResults_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            if (_testFrameworkRunner == null) return;
+            if (listViewTestScripts.Items.Count <= 0) return;
+
+            var fbd = new FolderBrowserDialog();
+            var result = fbd.ShowDialog();
+            if (result != DialogResult.OK) return;
+            var folder = fbd.SelectedPath;
+            var testResults = _testFrameworkRunner.ReadTestResultsFromFolder(folder);
+            if (testResults.Count <= 0) return;
+
+            foreach (var testResult in testResults)
+            {
+                foreach (ListViewItem item in listViewTestScripts.Items)
+                {
+                    var testScript = (item.Tag as TestScript);
+
+                    if (testScript == null || testScript.Name != testResult.Name) continue;
+
+                    testScript.LastExecutionErrorMsg = testResult.LastExecutionErrorMsg;
+                    testScript.ErrorClassification = testResult.ErrorClassification;
+                    testScript.TestExecutionStatus = testResult.TestExecutionStatus;
+                    UpdateListviewItemBasedOnTestStatus(testScript, item);
+                    break;
+                }
+            }
+
+            MessageBox.Show(@"Done!");
+        }
     }
 
     class ListViewItemComparer : IComparer

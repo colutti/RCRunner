@@ -206,7 +206,9 @@ namespace MSTestWrapper
 
                 p.WaitForExit();
 
-                var testResult = GetTestStatusFromTrxFile(resultFile, ref errorMsg);
+                var dummy = string.Empty;
+
+                var testResult = GetTestStatusFromTrxFile(resultFile, ref errorMsg, ref dummy);
 
                 return testResult;
             }
@@ -248,13 +250,41 @@ namespace MSTestWrapper
             }
         }
 
+        public override List<TestScript> ReadTestResultsFromFolder(string folder)
+        {
+            var testScripts = new List<TestScript>();
+            var files = Directory.GetFiles(folder, "*.trx", SearchOption.AllDirectories);
+            var errorMsg = string.Empty;
+            var testName = string.Empty;
+
+            // ReSharper disable once LoopCanBeConvertedToQuery
+            foreach (var file in files)
+            {
+                var testResult = GetTestStatusFromTrxFile(file, ref errorMsg, ref testName);
+
+                var errorClassification = _errorClassificationSuggestionList.GetErrorClassificationSugestion(errorMsg);
+                
+                var testScript = new TestScript(null)
+                {
+                    TestExecutionStatus = testResult ? TestExecutionStatus.Passed : TestExecutionStatus.Failed,
+                    ErrorClassification = errorClassification,
+                    LastExecutionErrorMsg = errorMsg,
+                    Name = testName
+                };
+                
+                testScripts.Add(testScript);
+            }
+            return testScripts;
+        }
+
         /// <summary>
         /// Gets the result outcome and, in case of a failed test case, returns the test case execution error
         /// </summary>
         /// <param name="fileName">TRX file to read from</param>
         /// <param name="errorMsg">The error message pointer to return the error when the test fails</param>
+        /// <param name="testName">Name of the test</param>
         /// <returns>Returns true if the test ran successfuly or false if the test failed</returns>
-        static bool GetTestStatusFromTrxFile(string fileName, ref string errorMsg)
+        static bool GetTestStatusFromTrxFile(string fileName, ref string errorMsg, ref string testName)
         {
             var fileStreamReader = new StreamReader(fileName);
             var xmlSer = new XmlSerializer(typeof(TestRunType));
@@ -267,6 +297,8 @@ namespace MSTestWrapper
             var unitTestResultType = resultType.Items.OfType<UnitTestResultType>().FirstOrDefault();
 
             if (unitTestResultType == null) throw new Exception("Cannot get the UnitTestResultType from the TRX file");
+
+            testName = unitTestResultType.testName;
 
             var testResult = unitTestResultType.outcome;
 

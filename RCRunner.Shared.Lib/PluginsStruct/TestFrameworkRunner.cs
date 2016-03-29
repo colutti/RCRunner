@@ -1,10 +1,17 @@
-﻿namespace RCRunner.Shared.Lib.PluginsStruct
+﻿using System.Collections.Generic;
+
+namespace RCRunner.Shared.Lib.PluginsStruct
 {
     /// <summary>
     ///     Defines an Interface to comunicate with different test frameworks, such as mstest, nunit, etc
     /// </summary>
     public class TestFrameworkRunner
     {
+        public virtual List<TestScript> ReadTestResultsFromFolder(string folder)
+        {
+            return null;
+        }
+
         /// <summary>
         ///     Executes a test case specified by the testcase param
         /// </summary>

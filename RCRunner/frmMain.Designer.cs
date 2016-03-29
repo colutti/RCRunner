@@ -51,6 +51,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.lblApplyFilter = new System.Windows.Forms.LinkLabel();
             this.cmbxAttributes = new System.Windows.Forms.CheckedListBox();
+            this.lblImportResults = new System.Windows.Forms.LinkLabel();
             this.label3 = new System.Windows.Forms.Label();
             this.lblTotalScripts = new System.Windows.Forms.Label();
             this.lblExportExcel = new System.Windows.Forms.LinkLabel();
@@ -261,6 +262,7 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.lblImportResults);
             this.splitContainer1.Panel2.Controls.Add(this.label3);
             this.splitContainer1.Panel2.Controls.Add(this.lblTotalScripts);
             this.splitContainer1.Panel2.Controls.Add(this.lblExportExcel);
@@ -363,6 +365,21 @@
             this.cmbxAttributes.Name = "cmbxAttributes";
             this.cmbxAttributes.Size = new System.Drawing.Size(217, 227);
             this.cmbxAttributes.TabIndex = 30;
+            // 
+            // lblImportResults
+            // 
+            this.lblImportResults.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblImportResults.AutoSize = true;
+            this.lblImportResults.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblImportResults.ForeColor = System.Drawing.Color.White;
+            this.lblImportResults.LinkColor = System.Drawing.Color.White;
+            this.lblImportResults.Location = new System.Drawing.Point(875, 597);
+            this.lblImportResults.Name = "lblImportResults";
+            this.lblImportResults.Size = new System.Drawing.Size(93, 17);
+            this.lblImportResults.TabIndex = 39;
+            this.lblImportResults.TabStop = true;
+            this.lblImportResults.Text = "Import results";
+            this.lblImportResults.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblImportResults_LinkClicked);
             // 
             // label3
             // 
@@ -560,6 +577,7 @@
         private System.Windows.Forms.CheckedListBox cmbxClasses;
         private System.Windows.Forms.ColumnHeader clmDuration;
         private System.Windows.Forms.ColumnHeader cmlErrorClassification;
+        private System.Windows.Forms.LinkLabel lblImportResults;
 
     }
 }
