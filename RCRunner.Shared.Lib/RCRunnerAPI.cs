@@ -31,8 +31,7 @@ namespace RCRunner.Shared.Lib
 
             if (Done())
             {
-
-                _pluginLoader.CallAfterTestRunPlugins(_runningTestCases);
+                _pluginLoader.CallAfterTestRunPlugins(TestClassesList);
             }
         }
 
